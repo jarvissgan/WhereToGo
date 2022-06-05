@@ -1,11 +1,19 @@
+
 import 'package:flutter/material.dart';
+import 'package:jarlist/screens/list_screen.dart';
 import 'package:jarlist/size_config.dart';
 
-class RecommendedList extends StatelessWidget {
+class RecommendedList extends StatefulWidget {
+  @override
+  State<RecommendedList> createState() => _RecommendedListState();
+}
+
+class _RecommendedListState extends State<RecommendedList> {
   List<String> items = List.generate(
     5,
     (i) => "List $i",
   );
+
 // TODO: gather data from database and randomize into array
   @override
   Widget build(BuildContext context) {
@@ -57,6 +65,10 @@ class RecommendedList extends StatelessWidget {
                   //limits the number of items to display to prevent overflow
                   itemCount: 5),
             ),
+          ),
+          TextButton(
+            onPressed: () {Navigator.of(context).pushNamed(ListScreen.routeName);},
+            child: Text('Create New List'),
           ),
         ]),
       ),

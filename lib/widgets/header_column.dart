@@ -2,8 +2,13 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-class HeaderColumn extends StatelessWidget {
+class HeaderColumn extends StatefulWidget {
 
+  @override
+  State<HeaderColumn> createState() => _HeaderColumnState();
+}
+
+class _HeaderColumnState extends State<HeaderColumn> {
   @override
   Widget build(BuildContext context) {
     return Container(
