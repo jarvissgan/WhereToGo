@@ -1,6 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+import 'package:jarlist/create_entry.dart';
+
 class LocationService {
   /*
   location service uses google places api to extract information
@@ -13,7 +15,7 @@ class LocationService {
     final String url =
         'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=$input&inputtype=textquery&key=$key';
 
-    var response = await http.get(Uri.parse(url));
+    var response = await http.post(Uri.parse(url));
     var json = convert.jsonDecode(response.body);
 
     //retrieves response from api and returns a placeid as String
@@ -31,12 +33,12 @@ class LocationService {
     String url =
         'https://maps.googleapis.com/maps/api/place/details/json?placeid=$placeID&key=$key';
 
-    var response = await http.get(Uri.parse(url));
+    var response = await http.post(Uri.parse(url));
     var json = convert.jsonDecode(response.body);
+    // print(CreateEntry(json).extractPhotos());
 
-    var results = json['result'] as Map<String, dynamic>;
+    var results = json as Map<String, dynamic>;
 
-    print(results);
     return results;
   }
 }
