@@ -17,7 +17,7 @@ class CreateEntry {
     return json['result']['formatted_address'] as String;
   }
 
-  String extractPhoneNumber() {
+  String extractPhone() {
     return json['result']['formatted_phone_number'] as String;
   }
 
