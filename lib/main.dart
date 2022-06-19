@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jarlist/screens/landing.dart';
@@ -5,7 +7,7 @@ import 'package:jarlist/screens/add_screen.dart';
 import 'package:jarlist/screens/login_screen.dart';
 import 'package:jarlist/widgets/home_widget.dart';
 
-
+import 'auth_service.dart';
 import 'screens/list_screen.dart';
 
 void main() {
@@ -14,25 +16,34 @@ void main() {
     statusBarColor: Colors.transparent,
   ));
 }
+
 List<String> items = List.generate(
   50,
-      (i) => "List $i",
+  (i) => "List $i",
 );
 
 class MyApp extends StatelessWidget {
+  AuthService authService = AuthService();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: LoginScreen(),
-      // initialRoute: HomeWidget.routeName,
-      routes: {
-        LandingScreen.routeName: (_) => LandingScreen(),
-        ListScreen.routeName: (_) => ListScreen(),
-      },
-    );
+    return FutureBuilder(
+        future: Firebase.initializeApp(),
+        builder: (context, snapshot) => StreamBuilder<User?>(
+            stream: authService.getAuthUser(),
+            builder: (context, snapshot) {
+              return MaterialApp(
+                theme: ThemeData(
+                  primarySwatch: Colors.blue,
+                ),
+                home: LoginScreen(),
+                // initialRoute: HomeWidget.routeName,
+                routes: {
+                  LandingScreen.routeName: (_) => LandingScreen(),
+                  ListScreen.routeName: (_) => ListScreen(),
+                },
+              );
+            }));
   }
 }
 
@@ -87,9 +98,9 @@ class _MainScreenState extends State<MainScreen> {
             selectedIndex = index;
           });
           _pageController.jumpToPage(index);
-            //TODO: gestures
-            // duration: const Duration(milliseconds: 300),
-            // curve: Curves.linear,
+          //TODO: gestures
+          // duration: const Duration(milliseconds: 300),
+          // curve: Curves.linear,
         },
       ),
     );

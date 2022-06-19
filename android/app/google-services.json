@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "334862072474",
+    "project_id": "jarlist-bbdc1",
+    "storage_bucket": "jarlist-bbdc1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334862072474:android:eac63254905b0461c07d23",
+        "android_client_info": {
+          "package_name": "com.example.jarlist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "334862072474-dmg2qku8avur5vb0khvi5il0d27iceqb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgZ1kKLmKJoJyIj-9gS09hQiyOQF6mnUs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "334862072474-dmg2qku8avur5vb0khvi5il0d27iceqb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
