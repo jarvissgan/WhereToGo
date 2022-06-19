@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jarlist/screens/landing.dart';
 import 'package:jarlist/screens/add_screen.dart';
+import 'package:jarlist/screens/login_screen.dart';
 import 'package:jarlist/widgets/home_widget.dart';
 
 
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainScreen(),
+      home: LoginScreen(),
       // initialRoute: HomeWidget.routeName,
       routes: {
         LandingScreen.routeName: (_) => LandingScreen(),
@@ -54,6 +55,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         toolbarHeight: -20,
       ),
