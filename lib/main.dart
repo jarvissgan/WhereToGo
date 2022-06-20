@@ -10,11 +10,17 @@ import 'package:jarlist/widgets/home_widget.dart';
 import 'auth_service.dart';
 import 'screens/list_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
+
   runApp(MyApp());
+
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
   ));
+
 }
 
 List<String> items = List.generate(
