@@ -1,29 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:jarlist/all_tags.dart';
 import 'package:jarlist/alll_entry.dart';
 import 'package:jarlist/location_service.dart';
 import 'package:jarlist/models/place.dart';
 import 'package:jarlist/screens/list_screen.dart';
 import 'package:jarlist/size_config.dart';
+import 'package:jarlist/widgets/tag_dialog.dart';
+import 'package:provider/provider.dart';
 
 class AddScreen extends StatefulWidget {
-  List<Place> myPlaces;
-  Entry(this.myPlaces);
-
   @override
   State<AddScreen> createState() => _AddScreenState();
 }
 
 class _AddScreenState extends State<AddScreen> {
-  var _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController _searchController = TextEditingController();
+  String restaurantName = '';
+  String restaurantAddress = '';
+  String restaurantPhone = '';
+  String restaurantWebsite = '';
+  String restaurantNotes = '';
+  String restaurantRating = '';
+  String tagName = '';
+  String tagColor = '';
+  List<dynamic> restaurantHours = [];
+  List<dynamic> restaurantImage = [];
+  String restaurantId = '';
 
-  List<Place> myPlaces = [];
-
-  void saveForm() async {
+  void saveForm(Entry placeList) async {
     bool isValid = _formKey.currentState!.validate();
     if (isValid) {
       _formKey.currentState!.save();
       setState(() {
-        Entry().addPlace(
+        placeList.addPlace(
             restaurantAddress,
             restaurantPhone,
             restaurantName,
@@ -31,12 +41,12 @@ class _AddScreenState extends State<AddScreen> {
             DateTime.now().toString(),
             restaurantHours,
             restaurantRating, {});
+        _formKey.currentState!.reset();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Saved!'),
+          duration: Duration(seconds: 1),
+        ));
       });
-      _formKey.currentState!.reset();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Saved!'),
-        duration: Duration(seconds: 1),
-      ));
     } else {
       FocusScope.of(context).unfocus();
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -47,19 +57,12 @@ class _AddScreenState extends State<AddScreen> {
     }
   }
 
-  TextEditingController _searchController = TextEditingController();
-  String restaurantName = '';
-  String restaurantAddress = '';
-  String restaurantPhone = '';
-  String restaurantWebsite = '';
-  String restaurantNotes = '';
-  String restaurantRating = '';
-  List<dynamic> restaurantHours = [];
-  List<dynamic> restaurantImage = [];
-  String restaurantId = '';
 
   @override
   Widget build(BuildContext context) {
+    //TODO: rename Entry() to AllPlaces()
+    Entry placeList = Provider.of<Entry>(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Form(
@@ -306,7 +309,18 @@ class _AddScreenState extends State<AddScreen> {
                         label: Text('Add Tags'),
                         icon: const Icon(Icons.add),
                         onPressed: () {
+                          //utilize inputchip to add tags
+                          showDialog(
+                            barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return WillPopScope(
+                                  onWillPop: () => Future.value(false),
+                                    child: TagDialog());
+                              });
                           /*TODO: add and show tag cards on click*/
+                          //TODO: convert button to chip
+
                         },
                       )),
                     ))
@@ -347,7 +361,7 @@ class _AddScreenState extends State<AddScreen> {
                   child: OutlinedButton(
                       onPressed: () {
                         setState(() {
-                          saveForm();
+                          saveForm(placeList);
                         });
                         //TODO: add entry to database
                         //TODO: change color of button

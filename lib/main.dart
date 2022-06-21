@@ -2,10 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jarlist/all_tags.dart';
+import 'package:jarlist/alll_entry.dart';
+import 'package:jarlist/models/tag.dart';
 import 'package:jarlist/screens/landing.dart';
 import 'package:jarlist/screens/add_screen.dart';
 import 'package:jarlist/screens/login_screen.dart';
 import 'package:jarlist/widgets/home_widget.dart';
+import 'package:provider/provider.dart';
 
 import 'auth_service.dart';
 import 'screens/list_screen.dart';
@@ -32,23 +36,35 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: Firebase.initializeApp(),
-        builder: (context, snapshot) => StreamBuilder<User?>(
-            stream: authService.getAuthUser(),
-            builder: (context, snapshot) {
-              return MaterialApp(
-                theme: ThemeData(
-                  primarySwatch: Colors.blue,
-                ),
-                home: MainScreen(),
-                // initialRoute: HomeWidget.routeName,
-                routes: {
-                  LandingScreen.routeName: (_) => LandingScreen(),
-                  ListScreen.routeName: (_) => ListScreen(),
-                },
-              );
-            }));
+    return MultiProvider(
+      providers: [
+        //listens for changes in Entry class
+        ChangeNotifierProvider<Entry>(
+          create: (context) => Entry(),
+        ),
+        //listens for changes in AllTags class
+        ChangeNotifierProvider<AllTags>(
+          create: (context) => AllTags(),
+        )
+      ],
+      child: FutureBuilder(
+          future: Firebase.initializeApp(),
+          builder: (context, snapshot) => StreamBuilder<User?>(
+              stream: authService.getAuthUser(),
+              builder: (context, snapshot) {
+                return MaterialApp(
+                  theme: ThemeData(
+                    primarySwatch: Colors.blue,
+                  ),
+                  home: MainScreen(),
+                  // initialRoute: HomeWidget.routeName,
+                  routes: {
+                    LandingScreen.routeName: (_) => LandingScreen(),
+                    ListScreen.routeName: (_) => ListScreen(),
+                  },
+                );
+              })),
+    );
   }
 }
 
@@ -70,6 +86,8 @@ class _MainScreenState extends State<MainScreen> {
   // note: entry = list view but its misleading to call it list_view
   @override
   Widget build(BuildContext context) {
+    Entry placeList = Provider.of<Entry>(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(

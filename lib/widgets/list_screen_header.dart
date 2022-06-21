@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ListScreenHeader extends StatefulWidget {
-
   @override
   State<ListScreenHeader> createState() => _ListScreenHeaderState();
 }
@@ -36,10 +35,10 @@ class _ListScreenHeaderState extends State<ListScreenHeader> {
             child: DropdownButton<String>(
               value: _dropDownValue,
               icon: const Icon(Icons.arrow_drop_down),
-              onChanged: (String? newValue) {
+              onChanged: (value) {
                 setState(() {
                   //TODO: implement all sorts
-                  _dropDownValue = newValue!;
+                  _dropDownValue = value!;
                 });
               },
               items: ['Entry date', 'Alphabetical', 'Unchecked']
@@ -49,7 +48,7 @@ class _ListScreenHeaderState extends State<ListScreenHeader> {
                   child: Text(value),
                 );
               }).toList(),
-        ),
+            ),
           ),
         ),
       ],

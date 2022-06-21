@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:jarlist/alll_entry.dart';
 import 'package:jarlist/models/place.dart';
 import 'package:jarlist/size_config.dart';
+import 'package:provider/provider.dart';
 
 class ListScreenWidget extends StatefulWidget {
-
   @override
   State<ListScreenWidget> createState() => _ListScreenWidgetState();
 }
@@ -12,35 +12,28 @@ class ListScreenWidget extends StatefulWidget {
 class _ListScreenWidgetState extends State<ListScreenWidget>
     with AutomaticKeepAliveClientMixin<ListScreenWidget> {
 
-
-
-
-  //
-  // List<String> items = List.generate(
-  //   50,
-  //   (i) => "List $i",
-  // );
   bool value = false;
 
   List<bool> _isChecked = List.generate(
     50,
     (i) => false,
   );
-
-  @override
-  void initState() {
-    super.initState();
-
-    //stores checkList state in a list of booleans to be referenced with _isChecked[i]
-    //without this everytime the checkbox is toggled, the whole list is toggled
-    _isChecked = List<bool>.filled(placeList.length, false);
-    print(placeList.length);
-  }
   List<Place> placeList = [];
+
 
 
   @override
   Widget build(BuildContext context) {
+    //TODO: rename Entry() to AllPlaces()
+    Entry placeList = Provider.of<Entry>(context);
+    @override
+    void initState() {
+      super.initState();
+      //stores checkList state in a list of booleans to be referenced with _isChecked[i]
+      //without this everytime the checkbox is toggled, the whole list is toggled
+      _isChecked = List<bool>.filled(placeList.getMyPlaces().length, false);
+      print(placeList.getMyPlaces().length);
+    }
     super.build(context);
     return Expanded(
       child: SingleChildScrollView(
@@ -77,7 +70,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
                       child: SizedBox(
                         //dimensions that scale with screen size
                         width: SizeConfig.blockSizeHorizontal * 70,
-                        height: SizeConfig.blockSizeVertical * 15,
+                        height: SizeConfig.blockSizeVertical * 17,
                         child: Column(
                           children: [
                             Container(
@@ -86,49 +79,46 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
                               margin: const EdgeInsets.only(top: 10, left: 15),
                               child: Align(
                                   alignment: Alignment.topLeft,
-                                  child: Text(placeList[i].name)),
+                                  child: Expanded(child: Text(placeList.getMyPlaces()[i].name))),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Container(
-                                  //ADDRESS
 
-                                  margin:
-                                      const EdgeInsets.only(top: 10, left: 15),
-                                  child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(placeList[i].address)),
+                                //container in flexible to allow address to wrap
+                                Flexible(
+                                  child: Container(
+                                    //ADDRESS
+
+                                    margin:
+                                        const EdgeInsets.only(top: 10, left: 15, right: 15),
+                                    child: Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(placeList.getMyPlaces()[i].address, overflow: TextOverflow.clip,)),
+                                  ),
                                 ),
-                                const Spacer(),
-                                Container(
-                                  //DATE
-                                margin:
-                                      const EdgeInsets.only(top: 10, right: 15),
-                                  child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text("Entry Date: \n" + placeList[i].name)),
-                                )
+                                //TODO: dates
+                                // const Spacer(),
+                                // Container(
+                                //   //DATE
+                                // margin:
+                                //       const EdgeInsets.only(top: 10, right: 15),
+                                //   child: Align(
+                                //       alignment: Alignment.topLeft,
+                                //       child: Text("Entry Date: \n" + placeList.getMyPlaces()[i].name)),
+                                // )
                               ],
                             ),
+                            Spacer(),
                             Row(
                               //ROW FOR TAGS
+                              //TODO: horizontal listview for tags
                               children: [
                                 Container(
-                                  margin: const EdgeInsets.only(top: 5, left: 10),
-                                  child: Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(9),
-                                        side: const BorderSide(
-                                          color: Colors.blueGrey,
-                                          width: 0.5,
-                                        ),
-                                      ),
-                                      child: SizedBox(
-                                        width: SizeConfig.blockSizeHorizontal * 20,
-                                        height: SizeConfig.blockSizeVertical * 3,
-                                        child: Center(child: Text(placeList[i].name)),
-                                      )),
+                                  margin: const EdgeInsets.only(top: 10, left: 15),
+                                  child: Chip(
+                                    label: Text( placeList.getMyPlaces()[i].rating),
+                                  )
                                 )
                               ],
                             )
@@ -140,7 +130,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
             );
           },
           //limits the number of items to display to prevent overflow
-          itemCount: placeList.length,
+          itemCount: placeList.getMyPlaces().length,
         ),
       ),
     );
