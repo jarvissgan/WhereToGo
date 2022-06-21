@@ -20,7 +20,6 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
   ));
-
 }
 
 List<String> items = List.generate(
@@ -42,7 +41,7 @@ class MyApp extends StatelessWidget {
                 theme: ThemeData(
                   primarySwatch: Colors.blue,
                 ),
-                home: LoginScreen(),
+                home: MainScreen(),
                 // initialRoute: HomeWidget.routeName,
                 routes: {
                   LandingScreen.routeName: (_) => LandingScreen(),
@@ -102,8 +101,8 @@ class _MainScreenState extends State<MainScreen> {
         onTap: (index) {
           setState(() {
             selectedIndex = index;
+            _pageController.jumpToPage(index);
           });
-          _pageController.jumpToPage(index);
           //TODO: gestures
           // duration: const Duration(milliseconds: 300),
           // curve: Curves.linear,

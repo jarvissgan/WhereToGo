@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jarlist/models/place.dart';
+import 'package:jarlist/screens/add_screen.dart';
 import 'package:jarlist/size_config.dart';
 
 class ListBuilder extends StatelessWidget {

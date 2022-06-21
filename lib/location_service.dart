@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
-import 'package:jarlist/create_entry.dart';
+import 'package:jarlist/alll_entry.dart';
 
 class LocationService {
   /*

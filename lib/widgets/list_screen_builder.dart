@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jarlist/alll_entry.dart';
+import 'package:jarlist/models/place.dart';
 import 'package:jarlist/size_config.dart';
 
 class ListScreenWidget extends StatefulWidget {
@@ -9,10 +11,15 @@ class ListScreenWidget extends StatefulWidget {
 
 class _ListScreenWidgetState extends State<ListScreenWidget>
     with AutomaticKeepAliveClientMixin<ListScreenWidget> {
-  List<String> items = List.generate(
-    50,
-    (i) => "List $i",
-  );
+
+
+
+
+  //
+  // List<String> items = List.generate(
+  //   50,
+  //   (i) => "List $i",
+  // );
   bool value = false;
 
   List<bool> _isChecked = List.generate(
@@ -26,8 +33,11 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
 
     //stores checkList state in a list of booleans to be referenced with _isChecked[i]
     //without this everytime the checkbox is toggled, the whole list is toggled
-    _isChecked = List<bool>.filled(items.length, false);
+    _isChecked = List<bool>.filled(placeList.length, false);
+    print(placeList.length);
   }
+  List<Place> placeList = [];
+
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +86,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
                               margin: const EdgeInsets.only(top: 10, left: 15),
                               child: Align(
                                   alignment: Alignment.topLeft,
-                                  child: Text(items[i])),
+                                  child: Text(placeList[i].name)),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -88,7 +98,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
                                       const EdgeInsets.only(top: 10, left: 15),
                                   child: Align(
                                       alignment: Alignment.topLeft,
-                                      child: Text(items[i])),
+                                      child: Text(placeList[i].address)),
                                 ),
                                 const Spacer(),
                                 Container(
@@ -97,7 +107,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
                                       const EdgeInsets.only(top: 10, right: 15),
                                   child: Align(
                                       alignment: Alignment.topLeft,
-                                      child: Text("Entry Date: \n" + items[i])),
+                                      child: Text("Entry Date: \n" + placeList[i].name)),
                                 )
                               ],
                             ),
@@ -117,7 +127,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
                                       child: SizedBox(
                                         width: SizeConfig.blockSizeHorizontal * 20,
                                         height: SizeConfig.blockSizeVertical * 3,
-                                        child: Center(child: Text(items[i])),
+                                        child: Center(child: Text(placeList[i].name)),
                                       )),
                                 )
                               ],
@@ -130,7 +140,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
             );
           },
           //limits the number of items to display to prevent overflow
-          itemCount: items.length,
+          itemCount: placeList.length,
         ),
       ),
     );
