@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:jarlist/models/place.dart';
 
-class Entry with ChangeNotifier {
+class AllEntries with ChangeNotifier {
   List<Place> myPlaces = [];
 
-  List<Place> getMyPlaces() {
+  List<Place> getAllPlaces() {
     return myPlaces;
   }
 
-  void addPlace(address, phone, name, website, entryDate, openingHours, rating, json) {
+  void addPlace(listName, address, phone, name, website, entryDate, openingHours, rating, json, tagList) {
     myPlaces.insert(myPlaces.length,Place(
+      listName: listName,
       name: name,
       address: address,
       phone: phone,
@@ -26,8 +27,13 @@ class Entry with ChangeNotifier {
         'openingHours': openingHours,
         'rating': rating,
       },
+      tagList: tagList,
     ));
-    print(myPlaces[0].name);
+    //prints all items in myPlaces list
+    notifyListeners();
+  }
+  void removePlace(name) {
+    myPlaces.removeWhere((place) => place.name == name);
     notifyListeners();
   }
 

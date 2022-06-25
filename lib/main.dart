@@ -1,10 +1,13 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jarlist/all_lists.dart';
 import 'package:jarlist/all_tags.dart';
 import 'package:jarlist/alll_entry.dart';
 import 'package:jarlist/models/tag.dart';
+import 'package:jarlist/screens/entry_view.dart';
 import 'package:jarlist/screens/landing.dart';
 import 'package:jarlist/screens/add_screen.dart';
 import 'package:jarlist/screens/login_screen.dart';
@@ -39,12 +42,15 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         //listens for changes in Entry class
-        ChangeNotifierProvider<Entry>(
-          create: (context) => Entry(),
+        ChangeNotifierProvider<AllEntries>(
+          create: (context) => AllEntries(),
         ),
         //listens for changes in AllTags class
         ChangeNotifierProvider<AllTags>(
           create: (context) => AllTags(),
+        ),
+        ChangeNotifierProvider<AllLists>(
+          create: (context) => AllLists(),
         )
       ],
       child: FutureBuilder(
@@ -61,6 +67,7 @@ class MyApp extends StatelessWidget {
                   routes: {
                     LandingScreen.routeName: (_) => LandingScreen(),
                     ListScreen.routeName: (_) => ListScreen(),
+                    EntryView.routeName: (_) => EntryView(),
                   },
                 );
               })),
@@ -86,7 +93,7 @@ class _MainScreenState extends State<MainScreen> {
   // note: entry = list view but its misleading to call it list_view
   @override
   Widget build(BuildContext context) {
-    Entry placeList = Provider.of<Entry>(context);
+    AllEntries placeList = Provider.of<AllEntries>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

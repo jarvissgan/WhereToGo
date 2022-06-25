@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:jarlist/all_tags.dart';
+import 'package:jarlist/models/tag.dart';
 import 'package:jarlist/size_config.dart';
+import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
+import 'package:multi_select_flutter/chip_field/multi_select_chip_field.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:provider/provider.dart';
 
 class TagDialog extends StatefulWidget {
@@ -8,18 +14,31 @@ class TagDialog extends StatefulWidget {
   State<TagDialog> createState() => _TagDialogState();
 }
 
-class _TagDialogState extends State<TagDialog> {
+class _TagDialogState extends State<TagDialog>
+    with AutomaticKeepAliveClientMixin<TagDialog> {
   final _formKey2 = GlobalKey<FormState>();
 
   String tagName = '';
-  String tagColor = '';
+  MaterialColor tagColor = Colors.blue;
+  List<Widget> tagWidgets = [];
+  var _selected = false;
+
+  //TODO: Make Dynamic
+  // nothing is as permanent as a temporary solution
+  List<bool> _isSelected = List.generate(
+    50,
+    (i) => false,
+  );
 
   void saveTag(AllTags tagList) async {
     bool isValid = _formKey2.currentState!.validate();
     if (isValid) {
       _formKey2.currentState!.save();
       setState(() {
-        tagList.addTag(tagName, tagColor);
+        tagList.addTag(
+          tagName,
+          tagColor as MaterialColor,
+        );
         _formKey2.currentState!.reset();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Saved!'),
@@ -40,6 +59,30 @@ class _TagDialogState extends State<TagDialog> {
   @override
   Widget build(BuildContext context) {
     AllTags tagList = Provider.of<AllTags>(context);
+    Widget filterChipDisplay(tagName, index) {
+      print(tagList.getSelectedTags());
+      //for loop to check if tag exists in getSelectedTags, if it does then it is selected
+      for (var tag in tagList.getSelectedTags()) {
+        if (tag['name'] == tagName) {
+          _isSelected[index] = true;
+        }
+      }
+      return FilterChip(
+          selected: _isSelected[index],
+          onSelected: (value) {
+            setState(() {
+              if (value) {
+                tagList.addSelectedTags(tagName, value);
+                print('added $tagName');
+              } else {
+                tagList.removeSelectedTags(tagName);
+                print('removed $tagName');
+              }
+              _isSelected[index] = value;
+            });
+          },
+          label: Text(tagName));
+    }
 
     return Form(
       key: _formKey2,
@@ -49,11 +92,33 @@ class _TagDialogState extends State<TagDialog> {
           margin: const EdgeInsets.all(10),
           child: SizedBox(
             width: SizeConfig.blockSizeHorizontal * 60,
-            height: SizeConfig.blockSizeVertical * 30,
+            height: SizeConfig.blockSizeVertical * 50,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Expanded(
+                  child: Wrap(
+                    direction: Axis.horizontal,
+                    spacing: SizeConfig.safeBlockHorizontal * 2,
+                    runSpacing: SizeConfig.safeBlockHorizontal * 2,
+                    children: [
+                      SizedBox(
+                        height: SizeConfig.safeBlockVertical * 30,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return filterChipDisplay(
+                                tagList.getAllTags()[index].name,
+                                index /*tagList.getAllTags()[index].color as String*/);
+                          },
+                          itemCount: tagList.getAllTags().length,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 //textformfield for adding tags
                 TextFormField(
                   decoration: InputDecoration(
@@ -80,7 +145,38 @@ class _TagDialogState extends State<TagDialog> {
                   icon: Icon(Icons.arrow_downward),
                   onChanged: (value) {
                     setState(() {
-                      tagColor = value!;
+                      //switch to set colors as string
+                      switch (value) {
+                        case 'Red':
+                          tagColor = Colors.red;
+                          saveTag(tagList);
+                          break;
+                        case 'Green':
+                          tagColor = Colors.green;
+                          break;
+                        case 'Blue':
+                          tagColor = Colors.blue;
+                          break;
+                        case 'Yellow':
+                          tagColor = Colors.yellow;
+                          break;
+                        case 'Orange':
+                          tagColor = Colors.orange;
+                          break;
+                        case 'Purple':
+                          tagColor = Colors.purple;
+                          break;
+                        case 'Pink':
+                          tagColor = Colors.pink;
+                          break;
+                        case 'Grey':
+                          tagColor = Colors.grey;
+                          break;
+                        case 'Cyan':
+                          tagColor = Colors.cyan;
+                          break;
+                      }
+                      print(tagColor);
                     });
                   },
                   validator: (value) {
@@ -98,8 +194,6 @@ class _TagDialogState extends State<TagDialog> {
                     'Blue',
                     'Purple',
                     'Grey',
-                    'Black',
-                    'White'
                   ].map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -110,7 +204,7 @@ class _TagDialogState extends State<TagDialog> {
                 Container(
                   margin: EdgeInsets.only(top: 10),
                   child: OutlinedButton.icon(
-                    //TODO: convert to chip and place above textformfield
+                      //TODO: convert to chip and place above textformfield
                       label: Text('Add Tags'),
                       icon: Icon(Icons.add),
                       onPressed: () {
@@ -146,21 +240,11 @@ class _TagDialogState extends State<TagDialog> {
             ),
           ),
         ),
-        // actions: <Widget>[
-        //   ElevatedButton(
-        //     child: const Text('Cancel'),
-        //     onPressed: () {
-        //       Navigator.pop(context);
-        //     },
-        //   ),
-        //   ElevatedButton(
-        //     child: const Text('Add'),
-        //     onPressed: () {
-        //       Navigator.pop(context);
-        //     },
-        //   ),
-        // ],
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
