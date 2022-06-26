@@ -10,8 +10,9 @@ class Place {
       phone,
       name,
       website,
-      entryDate;
+      entryDate,
+  restaurantNotes;
 
-  Place({required this.listName,required this.json, required this.entryDate, required this.address, required this.phone, required this.name, required this.website, required this.openingHours, required this.rating, required this.tagList});
+  Place({required this.listName,required this.json, required this.entryDate, required this.address, required this.phone, required this.name, required this.website, required this.openingHours, required this.rating, required this.tagList, required this.restaurantNotes});
 
 }

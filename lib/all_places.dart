@@ -35,6 +35,16 @@ class AllLists with ChangeNotifier{
     allLists.insert(allLists.length, Lists(entrylist: entryList, listName: newName, tagList: tagList));
     notifyListeners();
   }
+
+  //gets list by name
+  List<dynamic> getListByName(name){
+    for(var list in allLists){
+      if(list.listName == name){
+        return list;
+      }
+    }
+    return allLists;
+  }
   void clearAllLists() {
     allLists.clear();
     print(allLists.length);

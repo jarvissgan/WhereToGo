@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jarlist/all_lists.dart';
+import 'package:jarlist/all_places.dart';
 import 'package:jarlist/all_tags.dart';
 import 'package:jarlist/alll_entry.dart';
 import 'package:jarlist/location_service.dart';
@@ -56,6 +56,7 @@ class _AddScreenState extends State<AddScreen> {
             restaurantRating,
             {},
             selectedTags,
+            restaurantNotes
           );
           _formKey.currentState!.reset();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -94,6 +95,7 @@ class _AddScreenState extends State<AddScreen> {
                     right: 30,
                   ),
                   child: DropdownButtonFormField<String>(
+                    hint: Text('Select a list to save to'),
                     value: null,
                     items: listList.getNamesAsList().map((String dropdownItem) {
                       print(dropdownItem);
@@ -327,10 +329,8 @@ class _AddScreenState extends State<AddScreen> {
                         alignment: Alignment.centerLeft, child: Text('Notes:')),
                     TextFormField(
                       validator: (value) {
-                        if (value == null) {
+                        if (value!.length > 200) {
                           return 'Please enter notes';
-                        } else {
-                          return null;
                         }
                       },
                       onSaved: (value) {

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jarlist/all_lists.dart';
+import 'package:jarlist/all_places.dart';
 import 'package:jarlist/all_tags.dart';
 import 'package:jarlist/alll_entry.dart';
 import 'package:jarlist/models/tag.dart';

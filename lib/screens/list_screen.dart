@@ -8,9 +8,7 @@ class ListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ListScreenWidget();
       //TODO: preloading pages to improve performance
-      body: Column(children: [ListScreenHeader(), ListScreenWidget()]),
-    );
   }
 }

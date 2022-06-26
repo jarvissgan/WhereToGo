@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:jarlist/all_lists.dart';
+import 'package:jarlist/all_places.dart';
 import 'package:jarlist/all_tags.dart';
 import 'package:jarlist/alll_entry.dart';
-import 'package:jarlist/models/place.dart';
-import 'package:jarlist/models/tag.dart';
-import 'package:jarlist/screens/add_screen.dart';
-import 'package:jarlist/size_config.dart';
 import 'package:provider/provider.dart';
-
-import '../models/list.dart';
 
 class ListBuilder extends StatefulWidget {
   List<String> items = List.generate(
