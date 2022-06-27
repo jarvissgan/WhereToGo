@@ -22,7 +22,7 @@ class _EntryViewState extends State<EntryView> {
 
     //gets arguments from Navigator
     final arguments =
-        ModalRoute.of(context)?.settings.arguments as Map<String, Object>;
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     List openingHours = arguments['openingHours'] as List;
     List tagList = arguments['tagList'] as List;
     String website = arguments['website'] as String;

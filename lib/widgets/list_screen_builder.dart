@@ -25,33 +25,37 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
   List<Place> placeList = [];
   String selectedListName = 'All Entries';
   List selectedList = [];
+  List selectedTemp = [];
+
 
   @override
   Widget build(BuildContext context) {
     //TODO: rename Entry() to AllPlaces()
     AllEntries placeList = Provider.of<AllEntries>(context);
     AllLists listList = Provider.of<AllLists>(context);
+    setState(() {
 
+    });
     List<String> dropDownList = listList.getNamesAsList();
+
     dropDownList.insert(0, 'All Entries');
 
     void changeList() {
       setState(() {
-        selectedList.clear();
-        for (var i = 0; i < placeList.getAllPlaces().length; i++) {
-          if (selectedListName == 'All Entries') {
-            selectedList = placeList.getAllPlaces();
-            print('sl ${selectedList[0].name}');
-            print(selectedList.length);
-          } else if (placeList.getAllPlaces()[i].listName == selectedListName) {
-            //checks if name already exists in list
-            if (selectedList.contains(placeList.getAllPlaces()[i])) {
-              print('already in list');
-            } else {
-              selectedList.add(placeList.getAllPlaces()[i]);
-              print('added to list');
-            }
-          }
+
+        List temp = placeList.getAllPlaces();
+        selectedTemp = [];
+        //checks if placeList.getAllPlaces().listName == selectedListName
+        if (selectedListName == 'All Entries') {
+          selectedTemp = placeList.getAllPlaces();
+        } else {
+          selectedTemp = temp.where((element) {
+            return element.listName == selectedListName;
+          }).toList();
+          //for loop to print all names in selectedTemp
+        }
+        for (int i = 0; i < selectedTemp.length; i++) {
+          print(selectedTemp[i].name);
         }
       });
     }
@@ -70,7 +74,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
       Container(
         margin: EdgeInsets.only(top: 10, left: 30, right: 30),
         child: DropdownButtonFormField<String>(
-          value: 'All Entries',
+          value: null,
           hint: Text('Select a list to view'),
           items: dropDownList.map((String dropdownItem) {
             return DropdownMenuItem<String>(
@@ -78,16 +82,9 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
               child: Text(dropdownItem),
             );
           }).toList(),
-          selectedItemBuilder: (context) {
-            return [
-              DropdownMenuItem<String>(
-                value: 'All Entries',
-                child: Text('All Entries'),
-              ),
-            ];
-          },
           onChanged: (value) {
             setState(() {
+              print('value of list $value');
               //checks if value is 'All Entries'
               selectedListName = value!;
               changeList();
@@ -156,7 +153,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
               ),
               onDismissed: (direction) {
                 setState(() {
-                  placeList.removePlace(selectedList[i].name);
+                  placeList.removePlace(selectedTemp[i].name);
                 });
               },
               child: ListTile(
@@ -186,16 +183,16 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
                           debugPrint('Tapped');
                           Navigator.of(context)
                               .pushNamed('/entryView', arguments: {
-                            'listName': selectedList[i].listName,
-                            'name': selectedList[i].name,
-                            'address': selectedList[i].address,
-                            'phone': selectedList[i].phone,
-                            'website': selectedList[i].website,
-                            'entry': selectedList[i].entryDate,
-                            'openingHours': selectedList[i].openingHours,
-                            'rating': selectedList[i].rating,
-                            'tagList': selectedList[i].tagList,
-                            'restaurantNotes': selectedList[i].restaurantNotes,
+                            'listName': selectedTemp[i].listName,
+                            'name': selectedTemp[i].name,
+                            'address': selectedTemp[i].address,
+                            'phone': selectedTemp[i].phone,
+                            'website': selectedTemp[i].website,
+                            'entry': selectedTemp[i].entryDate,
+                            'openingHours': selectedTemp[i].openingHours,
+                            'rating': selectedTemp[i].rating,
+                            'tagList': selectedTemp[i].tagList,
+                            'restaurantNotes': selectedTemp[i].restaurantNotes,
                           });
                         },
                         child: SizedBox(
@@ -211,7 +208,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
                                     const EdgeInsets.only(top: 10, left: 15),
                                 child: Align(
                                     alignment: Alignment.topLeft,
-                                    child: Text(selectedList[i].name)),
+                                    child: Text(selectedTemp[i].name)),
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -227,7 +224,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
                                       child: Align(
                                           alignment: Alignment.topLeft,
                                           child: Text(
-                                            selectedList[i].address,
+                                            selectedTemp[i].address,
                                             overflow: TextOverflow.clip,
                                           )),
                                     ),
@@ -249,7 +246,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
                                 //ROW FOR TAGS
                                 children: [
                                   //takes elements from list of tags and creates a chip for each one
-                                  for (var tag in selectedList[i].tagList)
+                                  for (var tag in selectedTemp[i].tagList)
                                     Chip(
                                       //TODO: fix tags getting overwritten by new entry
                                       label: Text(tag['name'] as String),
@@ -266,7 +263,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
             );
           },
           //limits the number of items to display to prevent overflow
-          itemCount: selectedList.length,
+          itemCount: selectedTemp.length,
         ),
       ),
     ]);

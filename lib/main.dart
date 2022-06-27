@@ -60,7 +60,8 @@ class MyApp extends StatelessWidget {
               builder: (context, snapshot) {
                 return MaterialApp(
                   theme: ThemeData(
-                    primarySwatch: Colors.blue,
+                    brightness: Brightness.light,
+                    //TODO: dark mode (change text color)
                   ),
                   home: MainScreen(),
                   // initialRoute: HomeWidget.routeName,

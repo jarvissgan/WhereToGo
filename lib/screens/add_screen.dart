@@ -187,11 +187,6 @@ class _AddScreenState extends State<AddScreen> {
                         isDense: true,
                         contentPadding: EdgeInsets.all(8),
                       ),
-                      onChanged: (value) {
-                        setState(() {
-                          restaurantName = value;
-                        });
-                      },
                     ),
                   ),
                 ]),

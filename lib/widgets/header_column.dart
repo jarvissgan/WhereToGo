@@ -21,7 +21,13 @@ class _HeaderColumnState extends State<HeaderColumn> {
                   alignment: Alignment.centerLeft,
                   child: Container(
                       margin: const EdgeInsets.only(top: 15, left: 40),
-                      child: const Text("JarList", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text("JarList", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),),
+                        TextButton.icon(onPressed: (){}, icon: Icon(Icons.list), label: Text('label'))
+                        ],
+                      ))),
             ]),
       ],
     );

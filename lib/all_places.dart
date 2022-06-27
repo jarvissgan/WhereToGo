@@ -36,6 +36,15 @@ class AllLists with ChangeNotifier{
     notifyListeners();
   }
 
+  // //edit place with new values
+  // void editPlace(name, address, ) {
+  //   //checks where place is in list
+  //   int index = allLists.indexWhere((list) => list.listName == name);
+  //   allLists.removeWhere((list) => list.listName == name);
+  //   allLists.insert(index, Lists(entrylist: entryList, listName: name, tagList: tagList));
+  //   notifyListeners();
+  // }
+
   //gets list by name
   List<dynamic> getListByName(name){
     for(var list in allLists){
