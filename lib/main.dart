@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +7,12 @@ import 'package:jarlist/all_tags.dart';
 import 'package:jarlist/alll_entry.dart';
 import 'package:jarlist/models/tag.dart';
 import 'package:jarlist/screens/entry_view.dart';
-import 'package:jarlist/screens/landing.dart';
 import 'package:jarlist/screens/add_screen.dart';
 import 'package:jarlist/screens/login_screen.dart';
-import 'package:jarlist/widgets/home_widget.dart';
+import 'package:jarlist/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
-import 'auth_service.dart';
+import 'services/auth_service.dart';
 import 'screens/list_screen.dart';
 
 void main() async {
@@ -66,7 +64,6 @@ class MyApp extends StatelessWidget {
                   home: MainScreen(),
                   // initialRoute: HomeWidget.routeName,
                   routes: {
-                    LandingScreen.routeName: (_) => LandingScreen(),
                     ListScreen.routeName: (_) => ListScreen(),
                     EntryView.routeName: (_) => EntryView(),
                   },

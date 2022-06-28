@@ -6,13 +6,13 @@ class AllLists with ChangeNotifier{
   List<dynamic> getAllLists() {
     return allLists;
   }
-  void addList(name, entryList, tagList) {
+  void addList(name) {
     //adds list if name doesn't already exist
     if(allLists.contains(name)){
       print("list already exists");
       notifyListeners();
     } else {
-      allLists.insert(allLists.length, Lists(listName: name, entrylist: entryList,  tagList: tagList));
+      allLists.insert(0, Lists(listName: name));
       notifyListeners();
     }
   }
@@ -30,9 +30,9 @@ class AllLists with ChangeNotifier{
     print(listNameList);
     return listNameList;
   }
-  void updateListName(name, newName, entryList, tagList) {
+  void updateListName(name, newName) {
     allLists.removeWhere((list) => list.listName == name);
-    allLists.insert(allLists.length, Lists(entrylist: entryList, listName: newName, tagList: tagList));
+    allLists.insert(allLists.length, Lists(listName: newName));
     notifyListeners();
   }
 
@@ -53,6 +53,10 @@ class AllLists with ChangeNotifier{
       }
     }
     return allLists;
+  }
+  void removeListByName(name){
+    allLists.removeWhere((list) => list.listName == name);
+    notifyListeners();
   }
   void clearAllLists() {
     allLists.clear();

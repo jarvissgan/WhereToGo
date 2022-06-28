@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:jarlist/auth_service.dart';
+import 'package:jarlist/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jarlist/all_places.dart';
-import 'package:jarlist/all_tags.dart';
-import 'package:jarlist/alll_entry.dart';
+import 'package:jarlist/size_config.dart';
+
 import 'package:provider/provider.dart';
 
 class ListBuilder extends StatefulWidget {
@@ -20,8 +20,6 @@ class ListBuilder extends StatefulWidget {
 class _ListBuilderState extends State<ListBuilder> {
   final _formKey = GlobalKey<FormState>();
   String listName = '';
-  List<AllTags> tagList = [];
-  List<AllEntries> entryList = [];
 
   void saveForm(AllLists listList) async {
     bool isValid = _formKey.currentState!.validate();
@@ -32,8 +30,6 @@ class _ListBuilderState extends State<ListBuilder> {
       setState(() {
         listList.addList(
           listName,
-          entryList,
-          tagList,
         );
         Navigator.of(context).pop();
         _formKey.currentState!.reset();
@@ -88,11 +84,38 @@ class _ListBuilderState extends State<ListBuilder> {
                           //aligns buttons to left
                           alignment: Alignment.centerLeft,
                           child: Container(
-                              margin: const EdgeInsets.only(top: 10, left: 0),
-                              child: TextButton(
-                                  //todo: include onPressed
-                                  onPressed: () {},
-                                  child: Text(listList.getAllLists()[i].listName)),
+                            width: SizeConfig.blockSizeHorizontal * 80,
+                              margin: const EdgeInsets.only(top: 10, left: 15),
+                              child: Card(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: TextButton(
+                                          //todo: include onPressed
+                                          onPressed: () {},
+                                          child: Text(listList.getAllLists()[i].listName)),
+                                    ),
+                                    //delete button
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              listList.removeList(listList.getAllLists()[i].listName);
+                                              //show snackbar
+                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                content: Text('Deleted!'),
+                                                duration: Duration(seconds: 1),
+                                              ));
+                                            });
+                                          },
+                                          icon: Icon(Icons.delete)),
+                                    ),
+                                  ],
+                                ),
+                              ),
                               padding: EdgeInsets.only(left: 10))),
                     );
                   },

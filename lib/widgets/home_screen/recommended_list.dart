@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jarlist/widgets/list_screen_builder.dart';
+import 'package:jarlist/widgets/list_screen/list_screen_builder.dart';
 import 'package:jarlist/size_config.dart';
 
 class RecommendedList extends StatefulWidget {

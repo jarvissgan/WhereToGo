@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jarlist/all_places.dart';
 import 'package:jarlist/all_tags.dart';
 import 'package:jarlist/alll_entry.dart';
-import 'package:jarlist/location_service.dart';
+import 'package:jarlist/services/location_service.dart';
 import 'package:jarlist/size_config.dart';
 import 'package:jarlist/widgets/tag_dialog.dart';
 import 'package:provider/provider.dart';
@@ -12,8 +12,11 @@ class AddScreen extends StatefulWidget {
   State<AddScreen> createState() => _AddScreenState();
 }
 
+String createListName = '';
+
 class _AddScreenState extends State<AddScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _formKey2 = GlobalKey<FormState>();
   TextEditingController _searchController = TextEditingController();
   String listName = '';
   String restaurantName = '';
@@ -30,6 +33,32 @@ class _AddScreenState extends State<AddScreen> {
   List<dynamic> restaurantImage = [];
   String restaurantId = '';
 
+  void saveListForm(AllLists listList) async {
+    bool isValid = _formKey2.currentState!.validate();
+
+    if (isValid) {
+      _formKey2.currentState!.save();
+      print('YOUIUUU $createListName');
+      setState(() {
+        listList.addList(
+          createListName,
+        );
+        Navigator.of(context).pop();
+        _formKey2.currentState!.reset();
+        createListName = '';
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Saved!'),
+          duration: Duration(seconds: 1),
+        ));
+      });
+    } else {
+      print("invalid");
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Please enter a name for your list'),
+        duration: Duration(seconds: 1),
+      ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +66,9 @@ class _AddScreenState extends State<AddScreen> {
     AllEntries placeList = Provider.of<AllEntries>(context);
     AllTags tagList = Provider.of<AllTags>(context);
     AllLists listList = Provider.of<AllLists>(context);
+
+    List<String> dropDownList = listList.getNamesAsList();
+    dropDownList.add('Create a new list');
 
     Future<void> saveForm(AllEntries placeList) async {
       bool isValid = _formKey.currentState!.validate();
@@ -46,18 +78,17 @@ class _AddScreenState extends State<AddScreen> {
         setState(() {
           print('LMAOO$listName');
           placeList.addPlace(
-            listName,
-            restaurantAddress,
-            restaurantPhone,
-            restaurantName,
-            restaurantWebsite,
-            DateTime.now().toString(),
-            restaurantHours,
-            restaurantRating,
-            {},
-            selectedTags,
-            restaurantNotes
-          );
+              listName,
+              restaurantAddress,
+              restaurantPhone,
+              restaurantName,
+              restaurantWebsite,
+              DateTime.now().toString(),
+              restaurantHours,
+              restaurantRating,
+              {},
+              selectedTags,
+              restaurantNotes);
           _formKey.currentState!.reset();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Saved!'),
@@ -97,18 +128,60 @@ class _AddScreenState extends State<AddScreen> {
                   child: DropdownButtonFormField<String>(
                     hint: Text('Select a list to save to'),
                     value: null,
-                    items: listList.getNamesAsList().map((String dropdownItem) {
-                      print(dropdownItem);
+                    items: dropDownList.map((String dropdownItem) {
                       return DropdownMenuItem<String>(
                         value: dropdownItem,
                         child: Text(dropdownItem),
                       );
                     }).toList(),
                     onChanged: (value) {
-                      setState(() {
-                        print("stuff $value");
-                        listName = value!;
-                      });
+                      //create a new list if user selects 'create a new list'
+                      if (value == 'Create a new list') {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Create a new list'),
+                              content: Form(
+                                key: _formKey2,
+                                child: TextFormField(
+                                  controller: TextEditingController(
+                                    text: createListName,
+                                  ),
+                                  onSaved: (value) {
+                                    setState(() {
+                                      createListName = value!;
+                                    });
+                                  },
+                                  decoration: InputDecoration(
+                                    labelText: 'List name',
+                                  ),
+                                ),
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Text('Save'),
+                                  onPressed: () {
+                                    setState(() {
+                                      saveListForm(listList);
+                                    });
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        setState(() {
+                          listName = value!;
+                        });
+                      }
                     },
                     onSaved: (value) {
                       setState(() {

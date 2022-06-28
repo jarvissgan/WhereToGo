@@ -74,7 +74,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
       Container(
         margin: EdgeInsets.only(top: 10, left: 30, right: 30),
         child: DropdownButtonFormField<String>(
-          value: null,
+          value: 'All Entries',
           hint: Text('Select a list to view'),
           items: dropDownList.map((String dropdownItem) {
             return DropdownMenuItem<String>(

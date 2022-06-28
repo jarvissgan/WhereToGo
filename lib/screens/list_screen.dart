@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jarlist/widgets/list_screen_builder.dart';
-import 'package:jarlist/widgets/list_screen_header.dart';
+import 'package:jarlist/widgets/list_screen/list_screen_builder.dart';
+import 'package:jarlist/widgets/list_screen/list_screen_header.dart';
 
 class ListScreen extends StatelessWidget {
   static const String routeName = '/entry';
