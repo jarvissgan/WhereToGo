@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jarlist/all_places.dart';
+import 'package:jarlist/all_list.dart';
 import 'package:jarlist/size_config.dart';
 
 import 'package:provider/provider.dart';
@@ -121,67 +121,68 @@ class _ListBuilderState extends State<ListBuilder> {
                   },
                   //tells the listview how many items to display
                   itemCount: listList.getAllLists().length),
-              //adds a create button
-              //TODO: route to create list page
-              Expanded(
-                flex: 0,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 15, left: 25),
-                    child: TextButton.icon(
-                        onPressed: () {
-                          //dialog to create list
-                          showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                    title: const Text('Create list'),
-                                    content: Form(
-                                      key: _formKey,
-                                      child: TextFormField(
-                                        controller: TextEditingController(
-                                            text: listName),
-                                        validator: (value) {
-                                          print(value);
-                                          if (value == null || value == "") {
-                                            return 'Please enter some text';
-                                          }
-                                          return null;
-                                        },
-                                        onSaved: (value) {
-                                          setState(() {
-                                            listName = value!;
-                                          });
-                                        },
-                                        decoration: InputDecoration(
-                                          hintText: 'List name',
-                                        ),
+
+              //adds a create button if length of listList < 7
+              if(listList.getAllLists().length <7 )
+                Expanded(
+                  flex: 0,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 15, left: 25),
+                      child: TextButton.icon(
+                          onPressed: () {
+                            //dialog to create list
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('Create list'),
+                                  content: Form(
+                                    key: _formKey,
+                                    child: TextFormField(
+                                      controller: TextEditingController(
+                                          text: listName),
+                                      validator: (value) {
+                                        print(value);
+                                        if (value == null || value == "") {
+                                          return 'Please enter some text';
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (value) {
+                                        setState(() {
+                                          listName = value!;
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                        hintText: 'List name',
                                       ),
                                     ),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: const Text('Cancel'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      FlatButton(
-                                        child: const Text('Create'),
-                                        onPressed: () {
-                                          setState(() {
-                                            //TODO: check for duplicate
-                                            saveForm(listList);
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ));
-                        },
-                        icon: Icon(Icons.add),
-                        label: Text("Create New List")),
+                                  ),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: const Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: const Text('Create'),
+                                      onPressed: () {
+                                        setState(() {
+                                          //TODO: check for duplicate
+                                          saveForm(listList);
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ));
+                          },
+                          icon: Icon(Icons.add),
+                          label: Text("Create New List")),
+                    ),
                   ),
                 ),
-              ),
             ]),
       ],
     );

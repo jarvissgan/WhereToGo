@@ -3,6 +3,8 @@ import 'package:jarlist/screens/settings_screen.dart';
 import 'package:jarlist/widgets/home_screen/list_builder.dart';
 import 'package:jarlist/widgets/home_screen/recommended_list.dart';
 
+import 'login_screen.dart';
+
 class HomeWidget extends StatefulWidget {
   static const String routeName = '/home';
 
@@ -39,32 +41,33 @@ class _HomeWidgetState extends State<HomeWidget> {
                       onSelected: (value) {
                         //checks for settings
                         if (value == "Settings") {
-                          Navigator.pushNamed(context, SettingsScreen.routeName);
+                          Navigator.pushNamed(
+                              context, SettingsScreen.routeName);
                         } else if (value == "Logout") {
-                          AlertDialog(
-                            title: Text('Logout'),
-                            content:
-                            Text('Are you sure you want to logout?'),
-                            actions: [
-                              FlatButton(
-                                child: Text('Cancel'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              FlatButton(
-                                child: Text('Logout'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context)
-                                      .pushNamedAndRemoveUntil(
-                                      '/',
-                                          (Route<dynamic> route) =>
-                                      false);
-                                },
-                              ),
-                            ],
-                          );
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                    title: Text('Logout'),
+                                    content: Text(
+                                        'Are you sure you want to logout?'),
+                                    actions: [
+                                      FlatButton(
+                                        child: Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      FlatButton(
+                                        child: Text('Logout'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          Navigator.of(context)
+                                              .pushNamed(LoginScreen.routeName);
+                                        },
+                                      )
+                                    ]);
+                              });
                         }
                         //logout
                       },
@@ -108,7 +111,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                 ))),
         ListBuilder(items),
         Spacer(),
-        RecommendedList(),
       ],
     );
   }

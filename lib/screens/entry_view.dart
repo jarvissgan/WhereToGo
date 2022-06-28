@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:jarlist/alll_entry.dart';
+import 'package:jarlist/all_entries.dart';
 import 'package:jarlist/screens/list_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';

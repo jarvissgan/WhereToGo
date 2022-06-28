@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:jarlist/all_places.dart';
+import 'package:jarlist/all_list.dart';
 import 'package:jarlist/all_tags.dart';
-import 'package:jarlist/alll_entry.dart';
+import 'package:jarlist/all_entries.dart';
 import 'package:jarlist/services/location_service.dart';
 import 'package:jarlist/size_config.dart';
 import 'package:jarlist/widgets/tag_dialog.dart';
@@ -15,6 +15,7 @@ class AddScreen extends StatefulWidget {
 
 String createListName = '';
 
+
 class _AddScreenState extends State<AddScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
@@ -26,7 +27,6 @@ class _AddScreenState extends State<AddScreen> {
   String restaurantWebsite = '';
   String restaurantNotes = '';
   String restaurantRating = '';
-  List<AllTags> restaurantTags = [];
   List selectedTags = [];
   String tagName = '';
   String tagColor = '';
@@ -39,7 +39,6 @@ class _AddScreenState extends State<AddScreen> {
 
     if (isValid) {
       _formKey2.currentState!.save();
-      print('YOUIUUU $createListName');
       setState(() {
         listList.addList(
           createListName,
@@ -53,7 +52,6 @@ class _AddScreenState extends State<AddScreen> {
         ));
       });
     } else {
-      print("invalid");
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Please enter a name for your list'),
         duration: Duration(seconds: 1),
@@ -75,9 +73,7 @@ class _AddScreenState extends State<AddScreen> {
       bool isValid = _formKey.currentState!.validate();
       if (isValid) {
         _formKey.currentState!.save();
-        print(restaurantTags);
         setState(() {
-          print('LMAOO$listName');
           placeList.addPlace(
               listName,
               restaurantAddress,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:jarlist/all_places.dart';
+import 'package:jarlist/all_list.dart';
 import 'package:jarlist/all_tags.dart';
-import 'package:jarlist/alll_entry.dart';
+import 'package:jarlist/all_entries.dart';
 import 'package:jarlist/models/place.dart';
 import 'package:jarlist/size_config.dart';
 import 'package:provider/provider.dart';
@@ -36,9 +36,8 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
     //TODO: rename Entry() to AllPlaces()
     AllEntries placeList = Provider.of<AllEntries>(context);
     AllLists listList = Provider.of<AllLists>(context);
-    setState(() {});
     List<String> dropDownList = listList.getNamesAsList();
-
+    // print(placeList.getAllPlaces()[1].tagList);
     dropDownList.insert(0, 'All Entries');
 
     void changeList() {

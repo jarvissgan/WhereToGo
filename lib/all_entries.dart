@@ -9,7 +9,7 @@ class AllEntries with ChangeNotifier {
   }
 
   void addPlace(listName, address, phone, name, website, entryDate, openingHours, rating, json, tagList, restaurantNotes) {
-    myPlaces.insert(myPlaces.length,Place(
+    myPlaces.add(Place(
       listName: listName,
       name: name,
       address: address,
@@ -30,20 +30,6 @@ class AllEntries with ChangeNotifier {
       tagList: tagList,
       restaurantNotes: restaurantNotes,
     ));
-    //prints all items in myPlaces list
-    // var se = 0;
-    // print(myPlaces[se].listName);
-    // print(myPlaces[se].name);
-    // print(myPlaces[se].address);
-    // print(myPlaces[se].phone);
-    // print(myPlaces[se].website);
-    // print(myPlaces[se].entryDate);
-    // print(myPlaces[se].openingHours);
-    // print(myPlaces[se].rating);
-    // print(myPlaces[se].json);
-    // print(myPlaces[se].tagList);
-
-
     notifyListeners();
   }
 

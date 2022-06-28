@@ -1,4 +1,4 @@
-import 'package:jarlist/alll_entry.dart';
+import 'package:jarlist/all_entries.dart';
 
 class Entry{
   String listName;
