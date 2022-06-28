@@ -10,6 +10,7 @@ import 'package:jarlist/screens/entry_view.dart';
 import 'package:jarlist/screens/add_screen.dart';
 import 'package:jarlist/screens/login_screen.dart';
 import 'package:jarlist/screens/home_screen.dart';
+import 'package:jarlist/screens/settings_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'services/auth_service.dart';
@@ -61,11 +62,14 @@ class MyApp extends StatelessWidget {
                     brightness: Brightness.light,
                     //TODO: dark mode (change text color)
                   ),
-                  home: MainScreen(),
+                  home: LoginScreen(),
                   // initialRoute: HomeWidget.routeName,
                   routes: {
                     ListScreen.routeName: (_) => ListScreen(),
                     EntryView.routeName: (_) => EntryView(),
+                    MainScreen.routeName: (_) => MainScreen(),
+                    SettingsScreen.routeName: (_) => SettingsScreen(),
+
                   },
                 );
               })),
@@ -74,7 +78,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MainScreen extends StatefulWidget {
-  static String routeName = '/';
+  static String routeName = '/home';
 
   @override
   State<MainScreen> createState() => _MainScreenState();

@@ -1,8 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:jarlist/main.dart';
 import 'package:jarlist/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
+  static const String routeName = '/login';
+
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -158,7 +161,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: ElevatedButton(
                         child: Text('Login'),
                         onPressed: () {
-                          login();
+                          Navigator.of(context).pushNamed(MainScreen.routeName);
+
                         },
                       ),
                     ),

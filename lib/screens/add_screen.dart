@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:jarlist/all_places.dart';
 import 'package:jarlist/all_tags.dart';
 import 'package:jarlist/alll_entry.dart';
@@ -83,7 +84,7 @@ class _AddScreenState extends State<AddScreen> {
               restaurantPhone,
               restaurantName,
               restaurantWebsite,
-              DateTime.now().toString(),
+              DateFormat.yMMMd().format(DateTime.now()).toString(),
               restaurantHours,
               restaurantRating,
               {},

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jarlist/screens/settings_screen.dart';
 import 'package:jarlist/widgets/home_screen/list_builder.dart';
 import 'package:jarlist/widgets/home_screen/recommended_list.dart';
 
@@ -10,10 +11,9 @@ class HomeWidget extends StatefulWidget {
 }
 
 class _HomeWidgetState extends State<HomeWidget> {
-
   List<String> items = List.generate(
     10,
-        (i) => "List $i",
+    (i) => "List $i",
   );
 
   @override
@@ -37,9 +37,39 @@ class _HomeWidgetState extends State<HomeWidget> {
                     //popup menu
                     PopupMenuButton<String>(
                       onSelected: (value) {
-                        print(value);
+                        //checks for settings
+                        if (value == "Settings") {
+                          Navigator.pushNamed(context, SettingsScreen.routeName);
+                        } else if (value == "Logout") {
+                          AlertDialog(
+                            title: Text('Logout'),
+                            content:
+                            Text('Are you sure you want to logout?'),
+                            actions: [
+                              FlatButton(
+                                child: Text('Cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              FlatButton(
+                                child: Text('Logout'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context)
+                                      .pushNamedAndRemoveUntil(
+                                      '/',
+                                          (Route<dynamic> route) =>
+                                      false);
+                                },
+                              ),
+                            ],
+                          );
+                        }
+                        //logout
                       },
-                      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                      itemBuilder: (BuildContext context) =>
+                          <PopupMenuEntry<String>>[
                         PopupMenuItem<String>(
                           value: 'Account',
                           child: Text('Account'),

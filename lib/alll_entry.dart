@@ -75,6 +75,18 @@ class AllEntries with ChangeNotifier {
     notifyListeners();
   }
 
+  //sort list by name
+  void sortByName() {
+    myPlaces.sort((a, b) => a.name.compareTo(b.name));
+    notifyListeners();
+  }
+
+  //sort list by entry date
+  void sortByDate() {
+    myPlaces.sort((a, b) => a.entryDate.compareTo(b.entryDate));
+    notifyListeners();
+  }
+
 
   void removePlace(name) {
     myPlaces.removeWhere((place) => place.name == name);
