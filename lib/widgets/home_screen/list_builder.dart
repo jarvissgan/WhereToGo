@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jarlist/all_list.dart';
+import 'package:jarlist/all_places.dart';
+import 'package:jarlist/alll_entry.dart';
 import 'package:jarlist/size_config.dart';
 
 import 'package:provider/provider.dart';
@@ -54,6 +55,7 @@ class _ListBuilderState extends State<ListBuilder> {
   @override
   Widget build(BuildContext context) {
     AllLists listList = Provider.of<AllLists>(context);
+    AllEntries placeList = Provider.of<AllEntries>(context);
 
     // SizeConfig().init(context);
     return Flex(
@@ -104,6 +106,9 @@ class _ListBuilderState extends State<ListBuilder> {
                                           onPressed: () {
                                             setState(() {
                                               listList.removeList(listList.getAllLists()[i].listName);
+                                              //removes entries with that list name
+                                              placeList.removePlace(listList.getAllLists()[i].listName);
+
                                               //show snackbar
                                               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                 content: Text('Deleted!'),
@@ -121,9 +126,9 @@ class _ListBuilderState extends State<ListBuilder> {
                   },
                   //tells the listview how many items to display
                   itemCount: listList.getAllLists().length),
-
-              //adds a create button if length of listList < 7
-              if(listList.getAllLists().length <7 )
+              //adds a create button
+              //TODO: route to create list page
+              if(listList.getAllLists().length < 7)
                 Expanded(
                   flex: 0,
                   child: Align(
@@ -183,6 +188,7 @@ class _ListBuilderState extends State<ListBuilder> {
                     ),
                   ),
                 ),
+
             ]),
       ],
     );

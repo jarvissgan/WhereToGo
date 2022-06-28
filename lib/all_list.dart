@@ -18,6 +18,8 @@ class AllLists with ChangeNotifier{
   }
   void removeList(name) {
     allLists.removeWhere((list) => list.listName == name);
+
+
     notifyListeners();
   }
 

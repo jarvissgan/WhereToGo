@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:jarlist/screens/login_screen.dart';
 import 'package:jarlist/screens/settings_screen.dart';
 import 'package:jarlist/widgets/home_screen/list_builder.dart';
 import 'package:jarlist/widgets/home_screen/recommended_list.dart';
-
-import 'login_screen.dart';
 
 class HomeWidget extends StatefulWidget {
   static const String routeName = '/home';
@@ -41,8 +40,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                       onSelected: (value) {
                         //checks for settings
                         if (value == "Settings") {
-                          Navigator.pushNamed(
-                              context, SettingsScreen.routeName);
+                          Navigator.pushNamed(context, SettingsScreen.routeName);
                         } else if (value == "Logout") {
                           showDialog(
                               context: context,
@@ -87,30 +85,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                         ),
                       ],
                     ),
-                    // CircleAvatar(
-                    //   backgroundColor: Colors.transparent,
-                    //   radius: 20,
-                    //   child: IconButton(
-                    //     icon: Icon(Icons.settings, color: Colors.black,),
-                    //     onPressed: () {
-                    //     },
-                    //   ),
-                    // ),
-                    // TextButton.icon(
-                    //   onPressed: () {},
-                    //   icon: Icon(Icons.settings),
-                    //   label: Text(
-                    //     "Settings",
-                    //     style: TextStyle(
-                    //         fontSize: 20,
-                    //         fontWeight: FontWeight.normal,
-                    //         color: Colors.black),
-                    //   ),
-                    // ),
                   ],
                 ))),
         ListBuilder(items),
-        Spacer(),
       ],
     );
   }

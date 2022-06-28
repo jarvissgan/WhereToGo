@@ -98,43 +98,47 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     AllEntries placeList = Provider.of<AllEntries>(context);
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        toolbarHeight: -20,
-      ),
-      body: PageView(
-        controller: _pageController,
-        children: _screens,
-        onPageChanged: _onPageChanged,
-        physics: const NeverScrollableScrollPhysics(),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'Add',
-          ),
-          BottomNavigationBarItem(
-            //TODO: change list icon when change to expanded LMAOOO
-            icon: Icon(Icons.format_list_bulleted),
-            label: 'List',
-          ),
-        ],
-        currentIndex: selectedIndex,
-        onTap: (index) {
-          setState(() {
-            selectedIndex = index;
-            _pageController.jumpToPage(index);
-          });
-          //TODO: gestures
-          // duration: const Duration(milliseconds: 300),
-          // curve: Curves.linear,
-        },
+    //willpopscope to prevent back button from closing app
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          toolbarHeight: -20,
+        ),
+        body: PageView(
+          controller: _pageController,
+          children: _screens,
+          onPageChanged: _onPageChanged,
+          physics: const NeverScrollableScrollPhysics(),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add),
+              label: 'Add',
+            ),
+            BottomNavigationBarItem(
+              //TODO: change list icon when change to expanded LMAOOO
+              icon: Icon(Icons.format_list_bulleted),
+              label: 'List',
+            ),
+          ],
+          currentIndex: selectedIndex,
+          onTap: (index) {
+            setState(() {
+              selectedIndex = index;
+              _pageController.jumpToPage(index);
+            });
+            //TODO: gestures
+            // duration: const Duration(milliseconds: 300),
+            // curve: Curves.linear,
+          },
+        ),
       ),
     );
   }

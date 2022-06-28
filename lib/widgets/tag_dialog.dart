@@ -73,10 +73,8 @@ class _TagDialogState extends State<TagDialog>
             setState(() {
               if (value) {
                 tagList.addSelectedTags(tagName, value);
-                print('added $tagName');
               } else {
                 tagList.removeSelectedTags(tagName);
-                print('removed $tagName');
               }
               _isSelected[index] = value;
             });

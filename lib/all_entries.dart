@@ -9,7 +9,9 @@ class AllEntries with ChangeNotifier {
   }
 
   void addPlace(listName, address, phone, name, website, entryDate, openingHours, rating, json, tagList, restaurantNotes) {
-    myPlaces.add(Place(
+
+    //checks for duplicate entries before adding
+    myPlaces.insert(myPlaces.length,Place(
       listName: listName,
       name: name,
       address: address,
@@ -74,8 +76,14 @@ class AllEntries with ChangeNotifier {
   }
 
 
-  void removePlace(name) {
-    myPlaces.removeWhere((place) => place.name == name);
+  void removePlace(listName) {
+    //removes all entries with same listName
+    for(var list in myPlaces){
+      if(list.listName == listName){
+        myPlaces.removeWhere((place) => place.listName == listName);
+      }
+    }
+
     notifyListeners();
   }
 

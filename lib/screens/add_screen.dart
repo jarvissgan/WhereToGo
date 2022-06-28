@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:jarlist/all_list.dart';
+import 'package:jarlist/all_places.dart';
 import 'package:jarlist/all_tags.dart';
-import 'package:jarlist/all_entries.dart';
+import 'package:jarlist/alll_entry.dart';
 import 'package:jarlist/services/location_service.dart';
 import 'package:jarlist/size_config.dart';
 import 'package:jarlist/widgets/tag_dialog.dart';
@@ -15,7 +15,6 @@ class AddScreen extends StatefulWidget {
 
 String createListName = '';
 
-
 class _AddScreenState extends State<AddScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
@@ -27,6 +26,7 @@ class _AddScreenState extends State<AddScreen> {
   String restaurantWebsite = '';
   String restaurantNotes = '';
   String restaurantRating = '';
+  List<dynamic> restaurantTags = [];
   List selectedTags = [];
   String tagName = '';
   String tagColor = '';
@@ -39,6 +39,7 @@ class _AddScreenState extends State<AddScreen> {
 
     if (isValid) {
       _formKey2.currentState!.save();
+      print('YOUIUUU $createListName');
       setState(() {
         listList.addList(
           createListName,
@@ -52,6 +53,7 @@ class _AddScreenState extends State<AddScreen> {
         ));
       });
     } else {
+      print("invalid");
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Please enter a name for your list'),
         duration: Duration(seconds: 1),
@@ -69,28 +71,75 @@ class _AddScreenState extends State<AddScreen> {
     List<String> dropDownList = listList.getNamesAsList();
     dropDownList.add('Create a new list');
 
-    Future<void> saveForm(AllEntries placeList) async {
+    void saveForm(AllEntries placeList) async {
       bool isValid = _formKey.currentState!.validate();
       if (isValid) {
         _formKey.currentState!.save();
         setState(() {
-          placeList.addPlace(
-              listName,
-              restaurantAddress,
-              restaurantPhone,
-              restaurantName,
-              restaurantWebsite,
-              DateFormat.yMMMd().format(DateTime.now()).toString(),
-              restaurantHours,
-              restaurantRating,
-              {},
-              selectedTags,
-              restaurantNotes);
-          _formKey.currentState!.reset();
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Saved!'),
-            duration: Duration(seconds: 1),
-          ));
+          print('LMAOO$listName');
+          if(placeList.myPlaces.any((element) => element.name == restaurantName)){
+            //shows dialog if restaurant already exists
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Error'),
+                  content: Text('Restaurant already exists'),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('OK'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        _formKey.currentState!.reset();
+                        restaurantName = '';
+                        restaurantAddress = '';
+                        restaurantPhone = '';
+                        restaurantWebsite = '';
+                        restaurantNotes = '';
+                        restaurantRating = '';
+                        restaurantTags = [];
+                        selectedTags = [];
+                        restaurantHours = [];
+                        restaurantImage = [];
+                        restaurantId = '';
+                        tagList.clearSelectedTags();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          } else{
+            placeList.addPlace(
+                listName,
+                restaurantAddress,
+                restaurantPhone,
+                restaurantName,
+                restaurantWebsite,
+                DateFormat.yMMMd().format(DateTime.now()).toString(),
+                restaurantHours,
+                restaurantRating,
+                {},
+                restaurantTags = List.from(tagList.getSelectedTags()),
+                restaurantNotes);
+            _formKey.currentState!.reset();
+            restaurantName = '';
+            restaurantAddress = '';
+            restaurantPhone = '';
+            restaurantWebsite = '';
+            restaurantNotes = '';
+            restaurantRating = '';
+            restaurantTags = [];
+            selectedTags = [];
+            restaurantHours = [];
+            restaurantImage = [];
+            restaurantId = '';
+            tagList.clearSelectedTags();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('Saved!'),
+              duration: Duration(seconds: 1),
+            ));
+          }
         });
       } else {
         FocusScope.of(context).unfocus();
@@ -468,8 +517,6 @@ class _AddScreenState extends State<AddScreen> {
                                         onWillPop: () => Future.value(false),
                                         child: TagDialog());
                                   });
-                              /*TODO: add and show tag cards on click*/
-                              //TODO: convert button to chip
                             },
                           ),
                         ],
@@ -503,7 +550,7 @@ class _AddScreenState extends State<AddScreen> {
                               restaurantHours = [];
                               restaurantImage = [];
                               restaurantId = '';
-                              tagList.clearSelectedTags();
+                              // tagList.clearSelectedTags();
                             });
                           },
                           child: Text('Clear all')),
@@ -514,10 +561,8 @@ class _AddScreenState extends State<AddScreen> {
                       child: OutlinedButton(
                           onPressed: () {
                             setState(() {
-                              selectedTags = tagList.getSelectedTags();
                               saveForm(placeList);
                             });
-                            //TODO: add entry to database
                             //TODO: change color of button
                           },
                           child: Text('Add to list')),

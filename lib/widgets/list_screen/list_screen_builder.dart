@@ -53,12 +53,8 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
           }).toList();
           //for loop to print all names in selectedTemp
         }
-        for (int i = 0; i < selectedTemp.length; i++) {
-          print(selectedTemp[i].name);
-        }
       });
     }
-
     @override
     void initState() {
       super.initState();
@@ -151,229 +147,231 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
           ),
         ],
       ),
-      SingleChildScrollView(
-        child: ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          itemBuilder: (cxt, i) {
-            return Dismissible(
-              key: UniqueKey(),
-              background: Container(
-                color: Colors.red,
-                child: Icon(
-                  Icons.delete,
-                  color: Colors.white,
+      Expanded(
+        child: SingleChildScrollView(
+          child: ListView.builder(
+            physics: const BouncingScrollPhysics(),
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemBuilder: (cxt, i) {
+              return Dismissible(
+                key: UniqueKey(),
+                background: Container(
+                  color: Colors.red,
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              onDismissed: (direction) {
-                setState(() {
-                  placeList.removePlace(selectedTemp[i].name);
-                });
-              },
-              child: ListTile(
-                title: Row(children: [
-                  if (buttonState)
-                    Checkbox(
-                      //CHECKBOX
-                      value: _isChecked[i],
-                      //references _isChecked for value of checkbox
-                      onChanged: (bool? newValue) {
-                        setState(() {
-                          _isChecked[i] = newValue!;
-                        });
-                      },
-                    ),
-                  if (buttonState)
-                    Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          side: const BorderSide(
-                            color: Colors.blueGrey,
-                            width: 0.2,
+                onDismissed: (direction) {
+                  setState(() {
+                    placeList.removePlace(selectedTemp[i].name);
+                  });
+                },
+                child: ListTile(
+                  title: Row(children: [
+                    if (buttonState)
+                      Checkbox(
+                        //CHECKBOX
+                        value: _isChecked[i],
+                        //references _isChecked for value of checkbox
+                        onChanged: (bool? newValue) {
+                          setState(() {
+                            _isChecked[i] = newValue!;
+                          });
+                        },
+                      ),
+                    if (buttonState)
+                      Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            side: const BorderSide(
+                              color: Colors.blueGrey,
+                              width: 0.2,
+                            ),
                           ),
-                        ),
-                        child: InkWell(
-                          splashColor: Colors.blue.withAlpha(30),
-                          onTap: () {
-                            /*TODO: create route*/
-                            debugPrint('Tapped');
-                            Navigator.of(context)
-                                .pushNamed('/entryView', arguments: {
-                              'listName': selectedTemp[i].listName,
-                              'name': selectedTemp[i].name,
-                              'address': selectedTemp[i].address,
-                              'phone': selectedTemp[i].phone,
-                              'website': selectedTemp[i].website,
-                              'entry': selectedTemp[i].entryDate,
-                              'openingHours': selectedTemp[i].openingHours,
-                              'rating': selectedTemp[i].rating,
-                              'tagList': selectedTemp[i].tagList,
-                              'restaurantNotes':
-                                  selectedTemp[i].restaurantNotes,
-                            });
-                          },
-                          child: SizedBox(
-                            //dimensions that scale with screen size
-                            width: SizeConfig.blockSizeHorizontal * 70,
-                            height: SizeConfig.blockSizeVertical * 17,
-                            child: Column(
-                              children: [
-                                Container(
-                                  //TITLE
+                          child: InkWell(
+                            splashColor: Colors.blue.withAlpha(30),
+                            onTap: () {
+                              /*TODO: create route*/
+                              debugPrint('Tapped');
+                              Navigator.of(context)
+                                  .pushNamed('/entryView', arguments: {
+                                'listName': selectedTemp[i].listName,
+                                'name': selectedTemp[i].name,
+                                'address': selectedTemp[i].address,
+                                'phone': selectedTemp[i].phone,
+                                'website': selectedTemp[i].website,
+                                'entry': selectedTemp[i].entryDate,
+                                'openingHours': selectedTemp[i].openingHours,
+                                'rating': selectedTemp[i].rating,
+                                'tagList': selectedTemp[i].tagList,
+                                'restaurantNotes':
+                                    selectedTemp[i].restaurantNotes,
+                              });
+                            },
+                            child: SizedBox(
+                              //dimensions that scale with screen size
+                              width: SizeConfig.blockSizeHorizontal * 70,
+                              height: SizeConfig.blockSizeVertical * 17,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    //TITLE
 
-                                  margin:
-                                      const EdgeInsets.only(top: 10, left: 15),
-                                  child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(selectedTemp[i].name)),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    //container in flexible to allow address to wrap
-                                    Flexible(
-                                      child: Container(
-                                        //ADDRESS
-
-                                        margin: const EdgeInsets.only(
-                                            top: 10, left: 15, right: 15),
-                                        child: Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                              selectedTemp[i].address,
-                                              overflow: TextOverflow.clip,
-                                            )),
-                                      ),
-                                    ),
-                                    //TODO: dates
-                                    // const Spacer(),
-                                    // Container(
-                                    //   //DATE
-                                    // margin:
-                                    //       const EdgeInsets.only(top: 10, right: 15),
-                                    //   child: Align(
-                                    //       alignment: Alignment.topLeft,
-                                    //       child: Text("Entry Date: \n" + placeList.getAllPlaces()[i].name)),
-                                    // )
-                                  ],
-                                ),
-                                const Spacer(),
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      top: 10, left: 15, right: 15),
-                                  child: Wrap(
-                                    direction: Axis.horizontal,
-                                    spacing: SizeConfig.safeBlockHorizontal * 2,
-                                    runSpacing:
-                                        SizeConfig.safeBlockHorizontal * 2,
+                                    margin:
+                                        const EdgeInsets.only(top: 10, left: 15),
+                                    child: Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(selectedTemp[i].name)),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      Row(
-                                        //ROW FOR TAGS
-                                        children: [
-                                          //takes elements from list of tags and creates a chip for each one
-                                          for (var tag
-                                              in selectedTemp[i].tagList)
-                                            Chip(
-                                              //TODO: fix tags getting overwritten by new entry
-                                              label:
-                                                  Text(tag['name'] as String),
-                                              //TODO: colors for tags
-                                            ),
-                                        ],
-                                      )
+                                      //container in flexible to allow address to wrap
+                                      Flexible(
+                                        child: Container(
+                                          //ADDRESS
+
+                                          margin: const EdgeInsets.only(
+                                              top: 10, left: 15, right: 15),
+                                          child: Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                selectedTemp[i].address,
+                                                overflow: TextOverflow.clip,
+                                              )),
+                                        ),
+                                      ),
+                                      //TODO: dates
+                                      // const Spacer(),
+                                      // Container(
+                                      //   //DATE
+                                      // margin:
+                                      //       const EdgeInsets.only(top: 10, right: 15),
+                                      //   child: Align(
+                                      //       alignment: Alignment.topLeft,
+                                      //       child: Text("Entry Date: \n" + placeList.getAllPlaces()[i].name)),
+                                      // )
                                     ],
                                   ),
-                                )
-                              ],
+                                  const Spacer(),
+                                  Container(
+                                    margin: const EdgeInsets.only(
+                                        top: 10, left: 15, right: 15),
+                                    child: Wrap(
+                                      direction: Axis.horizontal,
+                                      spacing: SizeConfig.safeBlockHorizontal * 2,
+                                      runSpacing:
+                                          SizeConfig.safeBlockHorizontal * 2,
+                                      children: [
+                                        Row(
+                                          //ROW FOR TAGS
+                                          children: [
+                                            //takes elements from list of tags and creates a chip for each one
+                                            for (var tag
+                                                in selectedTemp[i].tagList)
+                                              Chip(
+                                                //TODO: fix tags getting overwritten by new entry
+                                                label:
+                                                    Text(tag['name'] as String),
+                                                //TODO: colors for tags
+                                              ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )),
+                    if (!buttonState)
+                      Checkbox(
+                        //CHECKBOX
+                        value: _isChecked[i],
+                        //references _isChecked for value of checkbox
+                        onChanged: (bool? newValue) {
+                          setState(() {
+                            _isChecked[i] = newValue!;
+                          });
+                        },
+                      ),
+                    //if button = expanded
+                    if (!buttonState)
+                      Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            side: const BorderSide(
+                              color: Colors.blueGrey,
+                              width: 0.2,
                             ),
                           ),
-                        )),
-                  if (!buttonState)
-                    Checkbox(
-                      //CHECKBOX
-                      value: _isChecked[i],
-                      //references _isChecked for value of checkbox
-                      onChanged: (bool? newValue) {
-                        setState(() {
-                          _isChecked[i] = newValue!;
-                        });
-                      },
-                    ),
-                  //if button = expanded
-                  if (!buttonState)
-                    Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          side: const BorderSide(
-                            color: Colors.blueGrey,
-                            width: 0.2,
-                          ),
-                        ),
-                        child: InkWell(
-                          splashColor: Colors.blue.withAlpha(30),
-                          onTap: () {
-                            /*TODO: create route*/
-                            debugPrint('Tapped');
-                            Navigator.of(context)
-                                .pushNamed('/entryView', arguments: {
-                              'listName': selectedTemp[i].listName,
-                              'name': selectedTemp[i].name,
-                              'address': selectedTemp[i].address,
-                              'phone': selectedTemp[i].phone,
-                              'website': selectedTemp[i].website,
-                              'entry': selectedTemp[i].entryDate,
-                              'openingHours': selectedTemp[i].openingHours,
-                              'rating': selectedTemp[i].rating,
-                              'tagList': selectedTemp[i].tagList,
-                              'restaurantNotes':
-                                  selectedTemp[i].restaurantNotes,
-                            });
-                          },
-                          child: SizedBox(
-                            //dimensions that scale with screen size
-                            width: SizeConfig.blockSizeHorizontal * 70,
-                            height: SizeConfig.blockSizeVertical * 7,
-                            child: Column(
-                              children: [
-                                Container(
-                                  //TITLE
-                                  margin:
-                                      const EdgeInsets.only(top: 10, left: 15),
-                                  child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Wrap(
-                                        direction: Axis.horizontal,
-                                        spacing: SizeConfig.safeBlockHorizontal *
-                                            2,
-                                        runSpacing:
-                                            SizeConfig.safeBlockHorizontal * 2,
-                                        children: [Container(
-                                          margin: const EdgeInsets.only(
-                                              left: 5, right: 5),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(selectedTemp[i].name),
-                                              Text(selectedTemp[i].entryDate),
-                                            ],
-                                          ),
-                                        )],
-                                      )),
-                                ),
-                                const Spacer(),
-                              ],
+                          child: InkWell(
+                            splashColor: Colors.blue.withAlpha(30),
+                            onTap: () {
+                              /*TODO: create route*/
+                              debugPrint('Tapped');
+                              Navigator.of(context)
+                                  .pushNamed('/entryView', arguments: {
+                                'listName': selectedTemp[i].listName,
+                                'name': selectedTemp[i].name,
+                                'address': selectedTemp[i].address,
+                                'phone': selectedTemp[i].phone,
+                                'website': selectedTemp[i].website,
+                                'entry': selectedTemp[i].entryDate,
+                                'openingHours': selectedTemp[i].openingHours,
+                                'rating': selectedTemp[i].rating,
+                                'tagList': selectedTemp[i].tagList,
+                                'restaurantNotes':
+                                    selectedTemp[i].restaurantNotes,
+                              });
+                            },
+                            child: SizedBox(
+                              //dimensions that scale with screen size
+                              width: SizeConfig.blockSizeHorizontal * 70,
+                              height: SizeConfig.blockSizeVertical * 7,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    //TITLE
+                                    margin:
+                                        const EdgeInsets.only(top: 10, left: 15),
+                                    child: Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Wrap(
+                                          direction: Axis.horizontal,
+                                          spacing: SizeConfig.safeBlockHorizontal *
+                                              2,
+                                          runSpacing:
+                                              SizeConfig.safeBlockHorizontal * 2,
+                                          children: [Container(
+                                            margin: const EdgeInsets.only(
+                                                left: 5, right: 5),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(selectedTemp[i].name),
+                                                Text(selectedTemp[i].entryDate),
+                                              ],
+                                            ),
+                                          )],
+                                        )),
+                                  ),
+                                  const Spacer(),
+                                ],
+                              ),
                             ),
-                          ),
-                        )),
-                ]),
-              ),
-            );
-          },
-          //limits the number of items to display to prevent overflow
-          itemCount: selectedTemp.length,
+                          )),
+                  ]),
+                ),
+              );
+            },
+            //limits the number of items to display to prevent overflow
+            itemCount: selectedTemp.length,
+          ),
         ),
       ),
     ]);
