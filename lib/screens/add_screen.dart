@@ -86,7 +86,7 @@ class _AddScreenState extends State<AddScreen> {
                   title: Text('Error'),
                   content: Text('Restaurant already exists'),
                   actions: <Widget>[
-                    FlatButton(
+                    TextButton(
                       child: Text('OK'),
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -194,6 +194,18 @@ class _AddScreenState extends State<AddScreen> {
                                   controller: TextEditingController(
                                     text: createListName,
                                   ),
+                                  validator: (value) {
+                                    if (value == '') {
+                                      return 'Please enter a name for your list';
+                                    } else {
+                                      for(var list in listList.getAllLists()){
+                                        if(list.listName == value){
+                                          return 'List already exists';
+                                        }
+                                      }
+                                      return null;
+                                    }
+                                  },
                                   onSaved: (value) {
                                     setState(() {
                                       createListName = value!;
@@ -205,13 +217,13 @@ class _AddScreenState extends State<AddScreen> {
                                 ),
                               ),
                               actions: <Widget>[
-                                FlatButton(
+                                TextButton(
                                   child: Text('Cancel'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
                                 ),
-                                FlatButton(
+                                TextButton(
                                   child: Text('Save'),
                                   onPressed: () {
                                     setState(() {
@@ -311,8 +323,8 @@ class _AddScreenState extends State<AddScreen> {
                 ]),
               ),
               Container(
-                  //contains address
-                  //TODO: onclick on address to open maps
+                //contains address
+                //TODO: onclick on address to open maps
                   margin: const EdgeInsets.only(top: 7, left: 30, right: 30),
                   child: Column(children: [
                     const Align(
@@ -330,7 +342,7 @@ class _AddScreenState extends State<AddScreen> {
                         restaurantAddress = value!;
                       },
                       controller:
-                          TextEditingController(text: restaurantAddress),
+                      TextEditingController(text: restaurantAddress),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         isDense: true,
@@ -343,8 +355,8 @@ class _AddScreenState extends State<AddScreen> {
                     ),
                   ])),
               Container(
-                  //container containing website
-                  //TODO: onclick on website to open website
+                //container containing website
+                //TODO: onclick on website to open website
                   margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
                   child: Column(children: [
                     const Align(
@@ -362,7 +374,7 @@ class _AddScreenState extends State<AddScreen> {
                         restaurantWebsite = value!;
                       },
                       controller:
-                          TextEditingController(text: restaurantWebsite),
+                      TextEditingController(text: restaurantWebsite),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         isDense: true,
@@ -402,7 +414,7 @@ class _AddScreenState extends State<AddScreen> {
                                 restaurantPhone = value!;
                               },
                               controller:
-                                  TextEditingController(text: restaurantPhone),
+                              TextEditingController(text: restaurantPhone),
                               decoration: const InputDecoration(
                                 hintText: 'Phone',
                                 isDense: true,
@@ -436,7 +448,7 @@ class _AddScreenState extends State<AddScreen> {
               Spacer(), //pushes notes box and buttons to bottom
 
               Container(
-                  //container containing notes
+                //container containing notes
                   margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
                   child: Column(children: [
                     Align(
@@ -462,8 +474,8 @@ class _AddScreenState extends State<AddScreen> {
                     ),
                   ])),
               Container(
-                  //container for tags
-                  //TODO: change font size
+                //container for tags
+                //TODO: change font size
                   alignment: Alignment.centerLeft,
                   margin: const EdgeInsets.only(
                       top: 5, left: 30, right: 30, bottom: 10),

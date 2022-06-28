@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class ListBuilder extends StatefulWidget {
   List<String> items = List.generate(
     50,
-    (i) => "List $i",
+        (i) => "List $i",
   );
 
   ListBuilder(this.items);
@@ -70,23 +70,23 @@ class _ListBuilderState extends State<ListBuilder> {
                   child: Container(
                       margin: const EdgeInsets.only(top: 15, left: 40),
                       child: const Text(
-                    "Lists:",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.black),
-                  ))),
+                        "Lists:",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black),
+                      ))),
               ListView.builder(
-                  //makes container unscrollable
+                //makes container unscrollable
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemBuilder: (cxt, i) {
                     return ListTile(
                       title: Align(
-                          //aligns buttons to left
+                        //aligns buttons to left
                           alignment: Alignment.centerLeft,
                           child: Container(
-                            width: SizeConfig.blockSizeHorizontal * 80,
+                              width: SizeConfig.blockSizeHorizontal * 80,
                               margin: const EdgeInsets.only(top: 10, left: 15),
                               child: Card(
                                 child: Row(
@@ -95,7 +95,7 @@ class _ListBuilderState extends State<ListBuilder> {
                                     Align(
                                       alignment: Alignment.centerLeft,
                                       child: TextButton(
-                                          //todo: include onPressed
+                                        //todo: include onPressed
                                           onPressed: () {},
                                           child: Text(listList.getAllLists()[i].listName)),
                                     ),
@@ -105,9 +105,10 @@ class _ListBuilderState extends State<ListBuilder> {
                                       child: IconButton(
                                           onPressed: () {
                                             setState(() {
-                                              listList.removeList(listList.getAllLists()[i].listName);
                                               //removes entries with that list name
                                               placeList.removePlace(listList.getAllLists()[i].listName);
+                                              listList.removeList(listList.getAllLists()[i].listName);
+
 
                                               //show snackbar
                                               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -151,8 +152,15 @@ class _ListBuilderState extends State<ListBuilder> {
                                         print(value);
                                         if (value == null || value == "") {
                                           return 'Please enter some text';
+                                        } else {
+                                          //checks if list name already exists
+                                          for(var list in listList.getAllLists()){
+                                            if(list.listName == value){
+                                              return 'List already exists';
+                                            }
+                                          }
+                                          return null;
                                         }
-                                        return null;
                                       },
                                       onSaved: (value) {
                                         setState(() {
@@ -165,13 +173,13 @@ class _ListBuilderState extends State<ListBuilder> {
                                     ),
                                   ),
                                   actions: <Widget>[
-                                    FlatButton(
+                                    TextButton(
                                       child: const Text('Cancel'),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
                                     ),
-                                    FlatButton(
+                                    TextButton(
                                       child: const Text('Create'),
                                       onPressed: () {
                                         setState(() {

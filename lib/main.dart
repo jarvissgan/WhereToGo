@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jarlist/all_list.dart';
+import 'package:jarlist/all_places.dart';
 import 'package:jarlist/all_tags.dart';
-import 'package:jarlist/all_entries.dart';
+import 'package:jarlist/alll_entry.dart';
 import 'package:jarlist/models/tag.dart';
 import 'package:jarlist/screens/entry_view.dart';
 import 'package:jarlist/screens/add_screen.dart';
@@ -87,7 +87,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   PageController _pageController = PageController();
-  final List<Widget> _screens = [HomeWidget(), AddScreen(), ListScreen()];
+  List<Widget> _screens = [HomeWidget(), AddScreen(), ListScreen()];
 
   void _onPageChanged(int index) {}
 
@@ -98,7 +98,6 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     AllEntries placeList = Provider.of<AllEntries>(context);
 
-    //willpopscope to prevent back button from closing app
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(

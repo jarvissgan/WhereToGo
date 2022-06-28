@@ -50,13 +50,13 @@ class _HomeWidgetState extends State<HomeWidget> {
                                     content: Text(
                                         'Are you sure you want to logout?'),
                                     actions: [
-                                      FlatButton(
+                                      TextButton(
                                         child: Text('Cancel'),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
                                       ),
-                                      FlatButton(
+                                      TextButton(
                                         child: Text('Logout'),
                                         onPressed: () {
                                           Navigator.of(context).pop();
@@ -85,9 +85,31 @@ class _HomeWidgetState extends State<HomeWidget> {
                         ),
                       ],
                     ),
+                    // CircleAvatar(
+                    //   backgroundColor: Colors.transparent,
+                    //   radius: 20,
+                    //   child: IconButton(
+                    //     icon: Icon(Icons.settings, color: Colors.black,),
+                    //     onPressed: () {
+                    //     },
+                    //   ),
+                    // ),
+                    // TextButton.icon(
+                    //   onPressed: () {},
+                    //   icon: Icon(Icons.settings),
+                    //   label: Text(
+                    //     "Settings",
+                    //     style: TextStyle(
+                    //         fontSize: 20,
+                    //         fontWeight: FontWeight.normal,
+                    //         color: Colors.black),
+                    //   ),
+                    // ),
                   ],
                 ))),
         ListBuilder(items),
+        Spacer(),
+        RecommendedList(),
       ],
     );
   }

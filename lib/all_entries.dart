@@ -9,8 +9,6 @@ class AllEntries with ChangeNotifier {
   }
 
   void addPlace(listName, address, phone, name, website, entryDate, openingHours, rating, json, tagList, restaurantNotes) {
-
-    //checks for duplicate entries before adding
     myPlaces.insert(myPlaces.length,Place(
       listName: listName,
       name: name,
@@ -32,6 +30,20 @@ class AllEntries with ChangeNotifier {
       tagList: tagList,
       restaurantNotes: restaurantNotes,
     ));
+    //prints all items in myPlaces list
+    // var se = 0;
+    // print(myPlaces[se].listName);
+    // print(myPlaces[se].name);
+    // print(myPlaces[se].address);
+    // print(myPlaces[se].phone);
+    // print(myPlaces[se].website);
+    // print(myPlaces[se].entryDate);
+    // print(myPlaces[se].openingHours);
+    // print(myPlaces[se].rating);
+    // print(myPlaces[se].json);
+    // print(myPlaces[se].tagList);
+
+
     notifyListeners();
   }
 
@@ -77,13 +89,7 @@ class AllEntries with ChangeNotifier {
 
 
   void removePlace(listName) {
-    //removes all entries with same listName
-    for(var list in myPlaces){
-      if(list.listName == listName){
-        myPlaces.removeWhere((place) => place.listName == listName);
-      }
-    }
-
+    myPlaces.removeWhere((place) => place.listName == listName);
     notifyListeners();
   }
 
