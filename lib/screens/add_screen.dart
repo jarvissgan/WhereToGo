@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:jarlist/all_places.dart';
+import 'package:jarlist/all_entries.dart';
+import 'package:jarlist/all_list.dart';
 import 'package:jarlist/all_tags.dart';
-import 'package:jarlist/alll_entry.dart';
 import 'package:jarlist/services/location_service.dart';
 import 'package:jarlist/size_config.dart';
 import 'package:jarlist/widgets/tag_dialog.dart';
