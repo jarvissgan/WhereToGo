@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class ListBuilder extends StatefulWidget {
   List<String> items = List.generate(
     50,
-        (i) => "List $i",
+    (i) => "List $i",
   );
 
   ListBuilder(this.items);
@@ -16,7 +16,6 @@ class ListBuilder extends StatefulWidget {
   @override
   State<ListBuilder> createState() => _ListBuilderState();
 }
-
 
 class _ListBuilderState extends State<ListBuilder> {
   final _formKey = GlobalKey<FormState>();
@@ -39,17 +38,14 @@ class _ListBuilderState extends State<ListBuilder> {
           content: Text('Saved!'),
           duration: Duration(seconds: 1),
         ));
-
       });
-
-    } else{
+    } else {
       print("invalid");
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Please enter a name for your list'),
         duration: Duration(seconds: 1),
       ));
     }
-
   }
 
   @override
@@ -77,27 +73,30 @@ class _ListBuilderState extends State<ListBuilder> {
                             color: Colors.black),
                       ))),
               ListView.builder(
-                //makes container unscrollable
+                  //makes container unscrollable
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemBuilder: (cxt, i) {
                     return ListTile(
                       title: Align(
-                        //aligns buttons to left
+                          //aligns buttons to left
                           alignment: Alignment.centerLeft,
                           child: Container(
                               width: SizeConfig.blockSizeHorizontal * 80,
                               margin: const EdgeInsets.only(top: 10, left: 15),
                               child: Card(
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Align(
                                       alignment: Alignment.centerLeft,
                                       child: TextButton(
-                                        //todo: include onPressed
+                                          //todo: include onPressed
                                           onPressed: () {},
-                                          child: Text(listList.getAllLists()[i].listName)),
+                                          child: Text(listList
+                                              .getAllLists()[i]
+                                              .listName)),
                                     ),
                                     //delete button
                                     Align(
@@ -106,12 +105,16 @@ class _ListBuilderState extends State<ListBuilder> {
                                           onPressed: () {
                                             setState(() {
                                               //removes entries with that list name
-                                              placeList.removePlace(listList.getAllLists()[i].listName);
-                                              listList.removeList(listList.getAllLists()[i].listName);
-
+                                              placeList.removePlace(listList
+                                                  .getAllLists()[i]
+                                                  .listName);
+                                              listList.removeList(listList
+                                                  .getAllLists()[i]
+                                                  .listName);
 
                                               //show snackbar
-                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
                                                 content: Text('Deleted!'),
                                                 duration: Duration(seconds: 1),
                                               ));
@@ -129,7 +132,7 @@ class _ListBuilderState extends State<ListBuilder> {
                   itemCount: listList.getAllLists().length),
               //adds a create button
               //TODO: route to create list page
-              if(listList.getAllLists().length < 7)
+              if (listList.getAllLists().length < 7)
                 Expanded(
                   flex: 0,
                   child: Align(
@@ -142,61 +145,61 @@ class _ListBuilderState extends State<ListBuilder> {
                             showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
-                                  title: const Text('Create list'),
-                                  content: Form(
-                                    key: _formKey,
-                                    child: TextFormField(
-                                      controller: TextEditingController(
-                                          text: listName),
-                                      validator: (value) {
-                                        print(value);
-                                        if (value == null || value == "") {
-                                          return 'Please enter some text';
-                                        } else {
-                                          //checks if list name already exists
-                                          for(var list in listList.getAllLists()){
-                                            if(list.listName == value){
-                                              return 'List already exists';
+                                      title: const Text('Create list'),
+                                      content: Form(
+                                        key: _formKey,
+                                        child: TextFormField(
+                                          controller: TextEditingController(
+                                              text: listName),
+                                          validator: (value) {
+                                            print(value);
+                                            if (value == null || value == "") {
+                                              return 'Please enter some text';
+                                            } else {
+                                              //checks if list name already exists
+                                              for (var list
+                                                  in listList.getAllLists()) {
+                                                if (list.listName == value) {
+                                                  return 'List already exists';
+                                                }
+                                              }
+                                              return null;
                                             }
-                                          }
-                                          return null;
-                                        }
-                                      },
-                                      onSaved: (value) {
-                                        setState(() {
-                                          listName = value!;
-                                        });
-                                      },
-                                      decoration: InputDecoration(
-                                        hintText: 'List name',
+                                          },
+                                          onSaved: (value) {
+                                            setState(() {
+                                              listName = value!;
+                                            });
+                                          },
+                                          decoration: InputDecoration(
+                                            hintText: 'List name',
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: const Text('Cancel'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    TextButton(
-                                      child: const Text('Create'),
-                                      onPressed: () {
-                                        setState(() {
-                                          //TODO: check for duplicate
-                                          saveForm(listList);
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ));
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text('Cancel'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: const Text('Create'),
+                                          onPressed: () {
+                                            setState(() {
+                                              //TODO: check for duplicate
+                                              saveForm(listList);
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ));
                           },
                           icon: Icon(Icons.add),
                           label: Text("Create New List")),
                     ),
                   ),
                 ),
-
             ]),
       ],
     );

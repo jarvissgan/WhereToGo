@@ -12,14 +12,12 @@ class AllLists with ChangeNotifier{
       print("list already exists");
       notifyListeners();
     } else {
-      allLists.insert(0, Lists(listName: name));
+      allLists.add(Lists(listName: name));
       notifyListeners();
     }
   }
   void removeList(name) {
     allLists.removeWhere((list) => list.listName == name);
-
-
     notifyListeners();
   }
 

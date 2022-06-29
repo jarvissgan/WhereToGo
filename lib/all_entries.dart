@@ -93,6 +93,11 @@ class AllEntries with ChangeNotifier {
     notifyListeners();
   }
 
+  void removePlaceWithName(name) {
+    myPlaces.removeWhere((place) => place.name == name);
+    notifyListeners();
+  }
+
   List<Place> returnPlace(){
     return myPlaces;
   }

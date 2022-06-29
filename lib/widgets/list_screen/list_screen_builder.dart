@@ -175,7 +175,8 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
               ),
               onDismissed: (direction) {
                 setState(() {
-                  placeList.removePlace(changeLists()[i].name);
+                  print(changeLists()[i].name);
+                  placeList.removePlaceWithName(changeLists()[i].name);
                 });
               },
               child: ListTile(
@@ -203,7 +204,6 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
                         child: InkWell(
                           splashColor: Colors.blue.withAlpha(30),
                           onTap: () {
-                            /*TODO: create route*/
                             debugPrint('Tapped');
                             Navigator.of(context)
                                 .pushNamed('/entryView', arguments: {

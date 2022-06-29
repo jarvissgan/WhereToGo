@@ -9,6 +9,7 @@ import 'package:jarlist/screens/entry_view.dart';
 import 'package:jarlist/screens/add_screen.dart';
 import 'package:jarlist/screens/login_screen.dart';
 import 'package:jarlist/screens/home_screen.dart';
+import 'package:jarlist/screens/register_screen.dart';
 import 'package:jarlist/screens/settings_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -69,6 +70,7 @@ class MyApp extends StatelessWidget {
                     MainScreen.routeName: (_) => MainScreen(),
                     SettingsScreen.routeName: (_) => SettingsScreen(),
                     LoginScreen.routeName: (_) => LoginScreen(),
+                    RegisterScreen.routeName: (_) => RegisterScreen(),
 
                   },
                 );
