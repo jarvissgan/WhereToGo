@@ -50,8 +50,13 @@ class AllEntries with ChangeNotifier {
   //updates place with new values without removing entry from list
 
   void updatePlace(listName, address, phone, name, website, entryDate, openingHours, rating, json, tagList, restaurantNotes) {
-    myPlaces.removeWhere((place) => place.listName == listName);
-    myPlaces.insert(myPlaces.length,Place(
+    //gets position of place in list
+    int position = myPlaces.indexWhere((place) => place.name == name);
+
+    print('POS $position');
+
+    myPlaces.removeWhere((place) => place.name == name);
+    myPlaces.insert(0,Place(
       listName: listName,
       name: name,
       address: address,
