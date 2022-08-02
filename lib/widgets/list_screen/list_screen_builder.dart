@@ -204,7 +204,6 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
                         child: InkWell(
                           splashColor: Colors.blue.withAlpha(30),
                           onTap: () {
-                            debugPrint('Tapped');
                             Navigator.of(context)
                                 .pushNamed('/entryView', arguments: {
                               'listName': changeLists()[i].listName,
@@ -216,8 +215,8 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
                               'openingHours': changeLists()[i].openingHours,
                               'rating': changeLists()[i].rating,
                               'tagList': changeLists()[i].tagList,
-                              'restaurantNotes':
-                                  changeLists()[i].restaurantNotes,
+                              'restaurantNotes': changeLists()[i].restaurantNotes,
+                              'photoReferences': changeLists()[i].photoReferences,
                             });
                           },
                           child: SizedBox(
@@ -334,8 +333,8 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
                               'openingHours': changeLists()[i].openingHours,
                               'rating': changeLists()[i].rating,
                               'tagList': changeLists()[i].tagList,
-                              'restaurantNotes':
-                                  changeLists()[i].restaurantNotes,
+                              'restaurantNotes': changeLists()[i].restaurantNotes,
+                              'photoReferences': changeLists()[i].photoReferences,
                             });
                           },
                           child: SizedBox(

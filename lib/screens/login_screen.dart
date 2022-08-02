@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:jarlist/main.dart';
 import 'package:jarlist/screens/register_screen.dart';
 import 'package:jarlist/services/auth_service.dart';
@@ -197,6 +198,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     //TODO: Login with Google
                     //TODO: register button
+                    //login with google with image
+                    // Container(
+                    //   margin: EdgeInsets.only(left: 30, right: 30, top: 30),
+                    //   child: SignInButton(
+                    //     Buttons.GoogleD,
+                    //     mini: true,
+                    //     onPressed: () {
+                    //       // _showButtonPressDialog(context, 'Google');
+                    //     },
+                    //   ),
+                    // ),
                     Container(
                       margin: EdgeInsets.only(left: 30, right: 30, top: 30),
                       child: SizedBox(

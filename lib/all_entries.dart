@@ -8,7 +8,7 @@ class AllEntries with ChangeNotifier {
     return myPlaces;
   }
 
-  void addPlace(listName, address, phone, name, website, entryDate, openingHours, rating, json, tagList, restaurantNotes) {
+  void addPlace(listName, address, phone, name, website, entryDate, openingHours, rating, photoReferences, tagList, restaurantNotes) {
     myPlaces.insert(myPlaces.length,Place(
       listName: listName,
       name: name,
@@ -17,39 +17,17 @@ class AllEntries with ChangeNotifier {
       website: website,
       openingHours: openingHours,
       rating: rating,
+      photoReferences: photoReferences,
       entryDate: entryDate,
-      json: {
-        'address': address,
-        'phone': phone,
-        'name': name,
-        'website': website,
-        'entryDate': entryDate,
-        'openingHours': openingHours,
-        'rating': rating,
-      },
       tagList: tagList,
       restaurantNotes: restaurantNotes,
     ));
-    //prints all items in myPlaces list
-    // var se = 0;
-    // print(myPlaces[se].listName);
-    // print(myPlaces[se].name);
-    // print(myPlaces[se].address);
-    // print(myPlaces[se].phone);
-    // print(myPlaces[se].website);
-    // print(myPlaces[se].entryDate);
-    // print(myPlaces[se].openingHours);
-    // print(myPlaces[se].rating);
-    // print(myPlaces[se].json);
-    // print(myPlaces[se].tagList);
-
-
     notifyListeners();
   }
 
   //updates place with new values without removing entry from list
 
-  void updatePlace(listName, address, phone, name, website, entryDate, openingHours, rating, json, tagList, restaurantNotes) {
+  void updatePlace(listName, address, phone, name, website, entryDate, openingHours, photoReferences, rating, tagList, restaurantNotes) {
     //gets position of place in list
     int position = myPlaces.indexWhere((place) => place.name == name);
 
@@ -64,16 +42,8 @@ class AllEntries with ChangeNotifier {
       website: website,
       openingHours: openingHours,
       rating: rating,
+      photoReferences: photoReferences,
       entryDate: entryDate,
-      json: {
-        'address': address,
-        'phone': phone,
-        'name': name,
-        'website': website,
-        'entryDate': entryDate,
-        'openingHours': openingHours,
-        'rating': rating,
-      },
       tagList: tagList,
       restaurantNotes: restaurantNotes,
     ));

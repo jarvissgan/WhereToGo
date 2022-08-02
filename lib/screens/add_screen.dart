@@ -27,12 +27,14 @@ class _AddScreenState extends State<AddScreen> {
   String restaurantNotes = '';
   String restaurantRating = '';
   List<dynamic> restaurantTags = [];
+  List<String> autocompletePlaces = [];
   List selectedTags = [];
   String tagName = '';
   String tagColor = '';
   List<dynamic> restaurantHours = [];
-  List<dynamic> restaurantImage = [];
+  List photoReferences = [];
   String restaurantId = '';
+  late List<String> autoCompleteData = [];
 
   void saveListForm(AllLists listList) async {
     bool isValid = _formKey2.currentState!.validate();
@@ -77,7 +79,8 @@ class _AddScreenState extends State<AddScreen> {
         _formKey.currentState!.save();
         setState(() {
           print('LMAOO$listName');
-          if(placeList.myPlaces.any((element) => element.name == restaurantName)){
+          if (placeList.myPlaces
+              .any((element) => element.name == restaurantName)) {
             //shows dialog if restaurant already exists
             showDialog(
               context: context,
@@ -100,7 +103,7 @@ class _AddScreenState extends State<AddScreen> {
                         restaurantTags = [];
                         selectedTags = [];
                         restaurantHours = [];
-                        restaurantImage = [];
+                        photoReferences = [];
                         restaurantId = '';
                         tagList.clearSelectedTags();
                       },
@@ -109,7 +112,7 @@ class _AddScreenState extends State<AddScreen> {
                 );
               },
             );
-          } else{
+          } else {
             placeList.addPlace(
                 listName,
                 restaurantAddress,
@@ -119,9 +122,10 @@ class _AddScreenState extends State<AddScreen> {
                 DateFormat.yMMMd().format(DateTime.now()).toString(),
                 restaurantHours,
                 restaurantRating,
-                {},
+                photoReferences,
                 restaurantTags = List.from(tagList.getSelectedTags()),
                 restaurantNotes);
+
             _formKey.currentState!.reset();
             restaurantName = '';
             restaurantAddress = '';
@@ -132,7 +136,7 @@ class _AddScreenState extends State<AddScreen> {
             restaurantTags = [];
             selectedTags = [];
             restaurantHours = [];
-            restaurantImage = [];
+            photoReferences = [];
             restaurantId = '';
             tagList.clearSelectedTags();
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -198,8 +202,8 @@ class _AddScreenState extends State<AddScreen> {
                                     if (value == '') {
                                       return 'Please enter a name for your list';
                                     } else {
-                                      for(var list in listList.getAllLists()){
-                                        if(list.listName == value){
+                                      for (var list in listList.getAllLists()) {
+                                        if (list.listName == value) {
                                           return 'List already exists';
                                         }
                                       }
@@ -256,42 +260,70 @@ class _AddScreenState extends State<AddScreen> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.only(left: 30, right: 30, top: 10),
-                child: TextFormField(
-                    controller: _searchController,
-                    textCapitalization: TextCapitalization.words,
-                    decoration: InputDecoration(
-                      hintText: 'Search a location',
-                      suffixIcon: IconButton(
+                margin: EdgeInsets.only(
+                  top: 10,
+                  left: 30,
+                  right: 30,
+                ),
+                child: Autocomplete<AutocompleteValue>(
+                  displayStringForOption: (value) => value.description,
+                  optionsBuilder: (TextEditingValue textEditingValue) async {
+                    if (textEditingValue.text.isEmpty) {
+                      return const Iterable<AutocompleteValue>.empty();
+                    } else {
+                      List<AutocompleteValue> autoCompleteList =
+                          await LocationService()
+                              .getAutocomplete(textEditingValue.text);
+                      return autoCompleteList.map(
+                          (AutocompleteValue autocompleteValue) =>
+                              autocompleteValue);
+                    }
+                  },
+                  onSelected: (AutocompleteValue selected) {
+                    LocationService().getPlace(selected.place_id).then((value) {
+                      setState(() {
+                        //gets list of photo_references from google api
+
+                        FocusScope.of(context).unfocus();
+                        //sets the restaurant name, address, phone, website
+                        restaurantName = AllEntries().extractName(value);
+                        restaurantAddress = AllEntries().extractAddress(value);
+                        restaurantPhone = AllEntries().extractPhone(value);
+                        restaurantWebsite = AllEntries().extractWebsite(value);
+                        restaurantRating =
+                            AllEntries().extractRating(value).toString();
+                        restaurantHours =
+                            AllEntries().extractOpeningHours(value);
+                        photoReferences = value['result']['photos']
+                            .map((photo) => photo['photo_reference'])
+                            .toList();
+                        restaurantId = AllEntries().extractPlaceId(value);
+                      });
+                    });
+                  },
+                  fieldViewBuilder:
+                      (context, controller, focusNode, onEditingComplete) {
+                    return TextField(
+                      controller: controller,
+                      focusNode: focusNode,
+                      textCapitalization: TextCapitalization.words,
+                      onEditingComplete: onEditingComplete,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        isDense: true,
+                        contentPadding: EdgeInsets.all(8),
+                        hintText: 'Search',
+                        prefixIcon: Icon(Icons.search),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.clear),
                           onPressed: () {
-                            LocationService()
-                                .getPlace(_searchController.text)
-                                .then((value) {
-                              setState(() {
-                                FocusScope.of(context).unfocus();
-                                //sets the restaurant name, address, phone, website
-                                restaurantName =
-                                    AllEntries().extractName(value);
-                                restaurantAddress =
-                                    AllEntries().extractAddress(value);
-                                restaurantPhone =
-                                    AllEntries().extractPhone(value);
-                                restaurantWebsite =
-                                    AllEntries().extractWebsite(value);
-                                restaurantRating = AllEntries()
-                                    .extractRating(value)
-                                    .toString();
-                                restaurantHours =
-                                    AllEntries().extractOpeningHours(value);
-                                restaurantImage =
-                                    AllEntries().extractPhotos(value);
-                                restaurantId =
-                                    AllEntries().extractPlaceId(value);
-                              });
-                            });
+                            controller.clear();
                           },
-                          icon: const Icon(Icons.search)),
-                    )),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
               //name
               Container(
@@ -322,9 +354,10 @@ class _AddScreenState extends State<AddScreen> {
                   ),
                 ]),
               ),
+
               Container(
-                //contains address
-                //TODO: onclick on address to open maps
+                  //contains address
+                  //TODO: onclick on address to open maps
                   margin: const EdgeInsets.only(top: 7, left: 30, right: 30),
                   child: Column(children: [
                     const Align(
@@ -342,7 +375,7 @@ class _AddScreenState extends State<AddScreen> {
                         restaurantAddress = value!;
                       },
                       controller:
-                      TextEditingController(text: restaurantAddress),
+                          TextEditingController(text: restaurantAddress),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         isDense: true,
@@ -355,8 +388,8 @@ class _AddScreenState extends State<AddScreen> {
                     ),
                   ])),
               Container(
-                //container containing website
-                //TODO: onclick on website to open website
+                  //container containing website
+                  //TODO: onclick on website to open website
                   margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
                   child: Column(children: [
                     const Align(
@@ -374,7 +407,7 @@ class _AddScreenState extends State<AddScreen> {
                         restaurantWebsite = value!;
                       },
                       controller:
-                      TextEditingController(text: restaurantWebsite),
+                          TextEditingController(text: restaurantWebsite),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         isDense: true,
@@ -414,7 +447,7 @@ class _AddScreenState extends State<AddScreen> {
                                 restaurantPhone = value!;
                               },
                               controller:
-                              TextEditingController(text: restaurantPhone),
+                                  TextEditingController(text: restaurantPhone),
                               decoration: const InputDecoration(
                                 hintText: 'Phone',
                                 isDense: true,
@@ -445,10 +478,11 @@ class _AddScreenState extends State<AddScreen> {
                 ]),
               ),
 
-              Spacer(), //pushes notes box and buttons to bottom
+              Spacer(),
+              //pushes notes box and buttons to bottom
 
               Container(
-                //container containing notes
+                  //container containing notes
                   margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
                   child: Column(children: [
                     Align(
@@ -474,8 +508,8 @@ class _AddScreenState extends State<AddScreen> {
                     ),
                   ])),
               Container(
-                //container for tags
-                //TODO: change font size
+                  //container for tags
+                  //TODO: change font size
                   alignment: Alignment.centerLeft,
                   margin: const EdgeInsets.only(
                       top: 5, left: 30, right: 30, bottom: 10),
@@ -560,7 +594,7 @@ class _AddScreenState extends State<AddScreen> {
                               restaurantWebsite = '';
                               restaurantRating = '';
                               restaurantHours = [];
-                              restaurantImage = [];
+                              photoReferences = [];
                               restaurantId = '';
                               // tagList.clearSelectedTags();
                             });

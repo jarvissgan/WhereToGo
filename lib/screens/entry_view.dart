@@ -1,7 +1,9 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:jarlist/all_entries.dart';
 import 'package:jarlist/screens/list_screen.dart';
+import 'package:jarlist/services/location_service.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -27,10 +29,14 @@ class _EntryViewState extends State<EntryView> {
   @override
   Widget build(BuildContext context) {
     AllEntries placeList = Provider.of<AllEntries>(context, listen: false);
+    final String key = 'no';
 
     //gets arguments from Navigator
     final arguments =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    ModalRoute
+        .of(context)
+        ?.settings
+        .arguments as Map<String, dynamic>;
     List openingHours = arguments['openingHours'] as List;
     List tagList = arguments['tagList'] as List;
     String website = arguments['website'] as String;
@@ -38,7 +44,7 @@ class _EntryViewState extends State<EntryView> {
 
     void saveForm() {
       bool isValid = _formKey.currentState!.validate();
-      if (isValid){
+      if (isValid) {
         _formKey.currentState!.save();
         setState(() {
           placeList.updatePlace(
@@ -49,8 +55,8 @@ class _EntryViewState extends State<EntryView> {
               website,
               arguments['entry'],
               openingHours,
+              arguments['photoReferences'],
               arguments['rating'],
-              {},
               tagList,
               restaurantNotes);
 
@@ -58,7 +64,7 @@ class _EntryViewState extends State<EntryView> {
           Navigator.of(context).pop();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text('Updated!'),
-          duration: Duration(seconds: 1)
+              duration: Duration(seconds: 1)
           ));
         });
       }
@@ -96,17 +102,33 @@ class _EntryViewState extends State<EntryView> {
                   enabled: false,
                   onChanged: (value) {},
                 ),
+                Container(
+                  child: CarouselSlider(
+                    items: [
+                      for (int i = 0; i < arguments['photoReferences'].length;
+                      i++)
+                        Container(
+                          child: Image.network(
+                            'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${arguments['photoReferences'][i]}&key=$key',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                    ], options: CarouselOptions(),
+                  ),
+                ),
                 //textFormField for address
                 Container(
                   margin: _editable
                       ? const EdgeInsets.only(top: 20)
                       : const EdgeInsets.only(top: 0),
                   child: TextFormField(
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+                    style: TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.normal),
                     initialValue: arguments['address'] as String,
                     decoration: InputDecoration(
                       //hide border when not editable
-                      border: _editable ? OutlineInputBorder() : InputBorder.none,
+                      border: _editable ? OutlineInputBorder() : InputBorder
+                          .none,
                       isDense: true,
                       //shows label when editable
                       labelText: _editable ? 'Address' : '',
@@ -128,12 +150,12 @@ class _EntryViewState extends State<EntryView> {
                     margin: const EdgeInsets.only(top: 20),
                     child: TextFormField(
                       style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+                      TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
                       initialValue: phone,
                       decoration: InputDecoration(
                         //hide border when not editable
                         border:
-                            _editable ? OutlineInputBorder() : InputBorder.none,
+                        _editable ? OutlineInputBorder() : InputBorder.none,
                         isDense: true,
                         //shows label when editable
                         labelText: _editable ? 'Phone' : '',
@@ -154,29 +176,29 @@ class _EntryViewState extends State<EntryView> {
                           text: phone.isEmpty
                               ? TextSpan(text: 'No Number')
                               : TextSpan(
-                                  text: phone,
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      decoration: TextDecoration.underline),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      //TODO: not hardcode
-                                      launchUrlString('tel:+6596478437');
-                                    }),
+                              text: phone,
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  //TODO: not hardcode
+                                  launchUrlString('tel:+6596478437');
+                                }),
                         )),
                   ),
                 if (_editable)
-                  //textFormField for website
+                //textFormField for website
                   Container(
                     margin: const EdgeInsets.only(top: 20),
                     child: TextFormField(
                       style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+                      TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
                       initialValue: arguments['website'] as String,
                       decoration: InputDecoration(
                         //hide border when not editable
                         border:
-                            _editable ? OutlineInputBorder() : InputBorder.none,
+                        _editable ? OutlineInputBorder() : InputBorder.none,
                         isDense: true,
                         //shows label when editable
                         labelText: _editable ? 'Website' : '',
@@ -187,7 +209,7 @@ class _EntryViewState extends State<EntryView> {
                     ),
                   ),
                 if (!_editable)
-                  //textFormField for website
+                //textFormField for website
                   Container(
                     margin: const EdgeInsets.only(top: 20, left: 10),
                     child: Align(
@@ -196,14 +218,14 @@ class _EntryViewState extends State<EntryView> {
                           text: website.isEmpty
                               ? TextSpan(text: 'No website')
                               : TextSpan(
-                                  text: website,
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      decoration: TextDecoration.underline),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      launch(website);
-                                    }),
+                              text: website,
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  launch(website);
+                                }),
                         )),
                   ),
                 Container(
@@ -234,7 +256,7 @@ class _EntryViewState extends State<EntryView> {
                   ],
                 ),
                 Container(
-                    //container containing notes
+                  //container containing notes
                     margin: const EdgeInsets.only(top: 10, left: 20, right: 20),
                     child: Column(children: [
                       TextFormField(
@@ -273,7 +295,8 @@ class _EntryViewState extends State<EntryView> {
                             //show dialog to confirm deletion
                             showDialog(
                                 context: context,
-                                builder: (context) => AlertDialog(
+                                builder: (context) =>
+                                    AlertDialog(
                                       title: const Text('Delete entry'),
                                       content: const Text(
                                           'Are you sure you want to delete this entry?'),
@@ -290,7 +313,8 @@ class _EntryViewState extends State<EntryView> {
                                             //delete entry
                                             setState(() {
                                               placeList
-                                                  .removePlace(arguments['name']);
+                                                  .removePlace(
+                                                  arguments['name']);
                                               //navigate to list view by popping
                                               Navigator.of(context).pop();
                                               Navigator.of(context).pop();
@@ -310,7 +334,8 @@ class _EntryViewState extends State<EntryView> {
                               //dialog to confirm edit
                               showDialog(
                                   context: context,
-                                  builder: (context) => AlertDialog(
+                                  builder: (context) =>
+                                      AlertDialog(
                                         title: const Text('Edit entry'),
                                         content: const Text(
                                             'Are you sure you want to edit this entry?'),
@@ -328,7 +353,6 @@ class _EntryViewState extends State<EntryView> {
                                                 _editable = false;
                                                 saveForm();
                                                 Navigator.of(context).pop();
-
                                               });
                                             },
                                           ),
