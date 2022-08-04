@@ -7,7 +7,7 @@ class LocationService {
   location service uses google places api to extract information
   about a location from user input
   */
-  final String key = 'no';
+  final String key = 'AIzaSyA8a4BGwhUGV9Y0lp81heB8fAo2PXnGsXg';
 
   // Future<String> getPlaceID(String input) async {
   //   //gets place id of location, to be used in getPlace()

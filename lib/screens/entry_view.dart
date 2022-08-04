@@ -29,7 +29,7 @@ class _EntryViewState extends State<EntryView> {
   @override
   Widget build(BuildContext context) {
     AllEntries placeList = Provider.of<AllEntries>(context, listen: false);
-    final String key = 'no';
+    final String key = 'AIzaSyA8a4BGwhUGV9Y0lp81heB8fAo2PXnGsXg';
 
     //gets arguments from Navigator
     final arguments =
