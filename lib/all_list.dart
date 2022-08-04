@@ -6,13 +6,13 @@ class AllLists with ChangeNotifier{
   List<dynamic> getAllLists() {
     return allLists;
   }
-  void addList(name) {
+  void addList(id, name) {
     //adds list if name doesn't already exist
     if(allLists.contains(name)){
       print("list already exists");
       notifyListeners();
     } else {
-      allLists.add(Lists(listName: name));
+      allLists.add(Lists(id: id, listName: name));
       notifyListeners();
     }
   }
@@ -30,9 +30,9 @@ class AllLists with ChangeNotifier{
     print(listNameList);
     return listNameList;
   }
-  void updateListName(name, newName) {
+  void updateListName(id, name, newName) {
     allLists.removeWhere((list) => list.listName == name);
-    allLists.insert(allLists.length, Lists(listName: newName));
+    allLists.insert(allLists.length, Lists(id: id, listName: newName));
     notifyListeners();
   }
 

@@ -47,18 +47,18 @@ class _EntryViewState extends State<EntryView> {
       if (isValid) {
         _formKey.currentState!.save();
         setState(() {
-          placeList.updatePlace(
-              arguments['listName'],
-              restaurantAddress,
-              phone,
-              arguments['name'],
-              website,
-              arguments['entry'],
-              openingHours,
-              arguments['photoReferences'],
-              arguments['rating'],
-              tagList,
-              restaurantNotes);
+          // placeList.updatePlace(
+          //     arguments['listName'],
+          //     restaurantAddress,
+          //     phone,
+          //     arguments['name'],
+          //     website,
+          //     arguments['entry'],
+          //     openingHours,
+          //     arguments['photoReferences'],
+          //     arguments['rating'],
+          //     tagList,
+          //     restaurantNotes);
 
           _formKey.currentState!.reset();
           Navigator.of(context).pop();

@@ -12,20 +12,22 @@ class Place {
       name,
       website,
       entryDate,
+  placeID,
   restaurantNotes;
   bool checkState;
 
-  Place({required this.id, required this.listName, required this.entryDate, required this.address, required this.phone, required this.name, required this.website, required this.openingHours, required this.photoReferences , required this.rating, required this.tagList, required this.restaurantNotes, required this.checkState});
+  Place({required this.id, required this.listName, required this.entryDate, required this.address, required this.phone, required this.name, required this.website,required this.placeID, required this.openingHours, required this.photoReferences , required this.rating, required this.tagList, required this.restaurantNotes, required this.checkState});
 
 
   Place.fromMap(Map<String, dynamic> snapshot, String id) :
-        id = id ?? '',
+        id = snapshot['id'] ?? '',
         listName = snapshot['listName'] ?? '',
         entryDate = snapshot['entryDate'] ?? '',
         address = snapshot['address'] ?? '',
         phone = snapshot['phone'] ?? '',
         name = snapshot['name'] ?? '',
         website = snapshot['website'] ?? '',
+        placeID = snapshot['placeID'] ?? '',
         openingHours = snapshot['openingHours'] ?? '',
         photoReferences = snapshot['photoReferences'] ?? '',
         rating = snapshot['rating'] ?? '',

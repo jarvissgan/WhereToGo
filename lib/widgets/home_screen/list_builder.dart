@@ -20,6 +20,7 @@ class ListBuilder extends StatefulWidget {
 class _ListBuilderState extends State<ListBuilder> {
   final _formKey = GlobalKey<FormState>();
   String listName = '';
+  String listId = '';
 
   void saveForm(AllLists listList) async {
     bool isValid = _formKey.currentState!.validate();
@@ -29,6 +30,7 @@ class _ListBuilderState extends State<ListBuilder> {
       print(listName);
       setState(() {
         listList.addList(
+          listId,
           listName,
         );
         Navigator.of(context).pop();

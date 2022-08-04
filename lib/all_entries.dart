@@ -8,7 +8,7 @@ class AllEntries with ChangeNotifier {
     return myPlaces;
   }
 
-  void addPlace(id, listName, address, phone, name, website, entryDate, openingHours, rating, photoReferences, tagList, restaurantNotes) {
+  void addPlace(id, listName, address, phone, name, website, entryDate, openingHours, rating, photoReferences, tagList, restaurantNotes, checkState,placeID) {
     myPlaces.insert(myPlaces.length,Place(
       id: id,
       listName: listName,
@@ -21,14 +21,14 @@ class AllEntries with ChangeNotifier {
       photoReferences: photoReferences,
       entryDate: entryDate,
       tagList: tagList,
-      restaurantNotes: restaurantNotes,
+      restaurantNotes: restaurantNotes, checkState: checkState, placeID: placeID,
     ));
     notifyListeners();
   }
 
   //updates place with new values without removing entry from list
 
-  void updatePlace(id, listName, address, phone, name, website, entryDate, openingHours, photoReferences, rating, tagList, restaurantNotes) {
+  void updatePlace(id, listName, address, phone, name, website, entryDate, openingHours, rating, photoReferences, tagList, restaurantNotes, checkState, placeID) {
     //gets position of place in list
     int position = myPlaces.indexWhere((place) => place.name == name);
 
@@ -47,7 +47,7 @@ class AllEntries with ChangeNotifier {
       photoReferences: photoReferences,
       entryDate: entryDate,
       tagList: tagList,
-      restaurantNotes: restaurantNotes,
+      restaurantNotes: restaurantNotes, checkState: checkState, placeID: placeID,
     ));
     notifyListeners();
   }

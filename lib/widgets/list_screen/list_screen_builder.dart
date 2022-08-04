@@ -35,27 +35,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
   Widget build(BuildContext context) {
     //TODO: rename Entry() to AllPlaces()
     // AllEntries placeList = Provider.of<AllEntries>(context);
-    AllLists listList = Provider.of<AllLists>(context);
-    List<String> dropDownList = listList.getNamesAsList();
-
-    dropDownList.insert(0, 'All Entries');
-
-    setState(() {
-      print(dropDownList.length);
-      if (dropDownList.length == 1) {
-        _dropDownListValue = 'All Entries';
-      }
-    });
-
-    List<dynamic> changeLists() {
-      if (selectedListName == 'All Entries') {
-        return placeList.getAllPlaces();
-      } else {
-        return placeList.getAllPlaces().where((element) {
-          return element.listName == selectedListName;
-        }).toList();
-      }
-    }
+    // AllLists listList = Provider.of<AllLists>(context);
 
     @override
     void initState() {
@@ -66,344 +46,461 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
       // print(placeList.getAllPlaces().length);
     }
 
+    Future<Stream<List<Place>>> _getPlaces() async {
+      return FirestoreService().getPlaces();
+    }
+
     super.build(context);
     FirestoreService fsService = FirestoreService();
-    return StreamBuilder<List<Place>>(
-        stream: fsService.getPlaces(),
-        builder: (context, snapshot) {
-          if(snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else
-          List<bool> _isChecked = List.generate(
-            snapshot.data!.length,
-            (i) => snapshot.data![i].checkState,
-          );
-          return Column(children: [
-            Container(
-              margin: EdgeInsets.only(top: 10, left: 30, right: 30),
-              child: DropdownButtonFormField<String>(
-                value: _dropDownListValue,
-                hint: Text('Select a list to view'),
-                items: dropDownList.map((String dropdownItem) {
-                  return DropdownMenuItem<String>(
-                    value: dropdownItem,
-                    child: Text(dropdownItem),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    //checks if value is 'All Entries'
-                    selectedListName = value!;
-                    // changeList();
-                    changeLists();
-                  });
-                },
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                //dropdown box containing lists from AllLists class
-                Align(
-                  //button to expand/compact list
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 15, left: 30),
-                    child: TextButton.icon(
-                      icon: const Icon(Icons.format_list_bulleted),
-                      label: Text(buttonName),
-                      onPressed: () {
-                        setState(() {
-                          if (buttonName != 'Compact') {
-                            buttonState = true;
-                            buttonName = 'Compact';
-                            //change button icon to compact onTap
+    return FutureBuilder(
+      future: _getPlaces(),
+      builder: (context, snapshot) {
+        return StreamBuilder<List<String>>(
+            stream: fsService.getLists(),
+            builder: (context, snapshot1) {
+              return StreamBuilder<List<Place>>(
+                  stream: fsService.getPlaces(),
+                  builder: (context, snapshot) {
+                    print(snapshot.data?[0].id);
 
-                          } else {
-                            buttonState = false;
-                            buttonName = 'Detailed';
-                          }
-                        });
-                        //TODO: expand/compact list
-                      },
-                    ),
-                  ),
-                ),
-                Align(
-                  //drop down list for sorting
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 15, right: 30),
-                    child: DropdownButton<String>(
-                      value: _dropDownValue,
-                      icon: const Icon(Icons.arrow_drop_down),
-                      onChanged: (value) {
-                        setState(() {
-                          _dropDownValue = value!;
+                    List<dynamic> changeLists() {
+                      if (snapshot.data != null) {
+                        if (selectedListName == 'All Entries') {
+                          return snapshot.data!;
+                        } else {
+                          return snapshot.data!.where((element) {
+                            return element.listName == selectedListName;
+                          }).toList();
+                        }
+                      } else {
+                        return [];
+                      }
+                    }
+                    List<String>? dropDownList = [];
+                    for(var list in snapshot1.data ?? []) {
+                      dropDownList.add(list);
+                    }
+                    dropDownList.insert(0, 'All Entries');
 
-                          if (value == 'Entry date') {
-                            placeList.sortByDate();
-                          } else {
-                            placeList.sortByName();
-                          }
-                        });
-                      },
-                      items: ['Entry date', 'Alphabetical', 'Unchecked']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SingleChildScrollView(
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (cxt, i) {
-                  return Dismissible(
-                    key: UniqueKey(),
-                    background: Container(
-                      color: Colors.red,
-                      child: Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                      ),
-                    ),
-                    onDismissed: (direction) {
-                      setState(() {
-                        print(changeLists()[i].name);
-                        fsService.removeEntryWithName(changeLists()[i].name);
-                      });
-                    },
-                    child: ListTile(
-                      title: Row(children: [
-                        if (buttonState)
-                          Checkbox(
-                            //CHECKBOX
-                            value: snapshot.data![i].checkState,
-                            //references _isChecked for value of checkbox
-                            onChanged: (bool? newValue) {
-                              setState(() {
-                                fsService.changeCheckState(i, newValue)[i];
-                              });
-                            },
-                          ),
-                        if (buttonState)
-                          Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: const BorderSide(
-                                  color: Colors.blueGrey,
-                                  width: 0.2,
-                                ),
-                              ),
-                              child: InkWell(
-                                splashColor: Colors.blue.withAlpha(30),
-                                onTap: () {
-                                  Navigator.of(context)
-                                      .pushNamed('/entryView', arguments: {
-                                    'listName': changeLists()[i].listName,
-                                    'name': changeLists()[i].name,
-                                    'address': changeLists()[i].address,
-                                    'phone': changeLists()[i].phone,
-                                    'website': changeLists()[i].website,
-                                    'entry': changeLists()[i].entryDate,
-                                    'openingHours':
-                                        changeLists()[i].openingHours,
-                                    'rating': changeLists()[i].rating,
-                                    'tagList': changeLists()[i].tagList,
-                                    'restaurantNotes':
-                                        changeLists()[i].restaurantNotes,
-                                    'photoReferences':
-                                        changeLists()[i].photoReferences,
+                      // print(dropDownList.length);
+                      if (dropDownList.length == 1) {
+                        _dropDownListValue = 'All Entries';
+                      }
+
+                    return snapshot.connectionState == ConnectionState.waiting
+                        ? const Center(child: CircularProgressIndicator())
+                        : Column(
+                        children: [
+                            Container(
+                              margin: EdgeInsets.only(top: 10, left: 30, right: 30),
+                              child: DropdownButtonFormField<String>(
+                                value: _dropDownListValue,
+                                hint: Text('Select a list to view'),
+                                items: dropDownList.map((String dropdownItem) {
+                                  return DropdownMenuItem<String>(
+                                    value: dropdownItem,
+                                    child: Text(dropdownItem),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    //checks if value is 'All Entries'
+                                    selectedListName = value!;
+                                    // changeList();
+                                    changeLists();
                                   });
                                 },
-                                child: SizedBox(
-                                  //dimensions that scale with screen size
-                                  width: SizeConfig.blockSizeHorizontal * 70,
-                                  height: SizeConfig.blockSizeVertical * 17,
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        //TITLE
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                //dropdown box containing lists from AllLists class
+                                Align(
+                                  //button to expand/compact list
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
+                                    margin:
+                                        const EdgeInsets.only(top: 15, left: 30),
+                                    child: TextButton.icon(
+                                      icon: const Icon(Icons.format_list_bulleted),
+                                      label: Text(buttonName),
+                                      onPressed: () {
+                                        setState(() {
+                                          if (buttonName != 'Compact') {
+                                            buttonState = true;
+                                            buttonName = 'Compact';
+                                            //change button icon to compact onTap
 
-                                        margin: const EdgeInsets.only(
-                                            top: 10, left: 15),
-                                        child: Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(changeLists()[i].name)),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          //container in flexible to allow address to wrap
-                                          Flexible(
-                                            child: Container(
-                                              //ADDRESS
+                                          } else {
+                                            buttonState = false;
+                                            buttonName = 'Detailed';
+                                          }
+                                        });
+                                        //TODO: expand/compact list
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  //drop down list for sorting
+                                  alignment: Alignment.centerRight,
+                                  child: Container(
+                                    margin:
+                                        const EdgeInsets.only(top: 15, right: 30),
+                                    child: DropdownButton<String>(
+                                      value: _dropDownValue,
+                                      icon: const Icon(Icons.arrow_drop_down),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _dropDownValue = value!;
 
-                                              margin: const EdgeInsets.only(
-                                                  top: 10, left: 15, right: 15),
-                                              child: Align(
-                                                  alignment: Alignment.topLeft,
-                                                  child: Text(
-                                                    changeLists()[i].address,
-                                                    overflow: TextOverflow.clip,
-                                                  )),
-                                            ),
-                                          ),
-                                          //TODO: dates
-                                          // const Spacer(),
-                                          // Container(
-                                          //   //DATE
-                                          // margin:
-                                          //       const EdgeInsets.only(top: 10, right: 15),
-                                          //   child: Align(
-                                          //       alignment: Alignment.topLeft,
-                                          //       child: Text("Entry Date: \n" + placeList.getAllPlaces()[i].name)),
-                                          // )
-                                        ],
-                                      ),
-                                      const Spacer(),
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                            top: 10, left: 15, right: 15),
-                                        child: Wrap(
-                                          direction: Axis.horizontal,
-                                          spacing:
-                                              SizeConfig.safeBlockHorizontal *
-                                                  2,
-                                          runSpacing:
-                                              SizeConfig.safeBlockHorizontal *
-                                                  2,
-                                          children: [
-                                            Row(
-                                              //ROW FOR TAGS
-                                              children: [
-                                                //takes elements from list of tags and creates a chip for each one
-                                                for (var tag
-                                                    in changeLists()[i].tagList)
-                                                  Chip(
-                                                    //TODO: fix tags getting overwritten by new entry
-                                                    label: Text(
-                                                        tag['name'] as String),
-                                                    //TODO: colors for tags
-                                                  ),
-                                              ],
-                                            )
-                                          ],
+                                          if (value == 'Entry date') {
+                                            // placeList.sortByDate();
+                                            snapshot.data!.sort((a, b) =>
+                                                a.entryDate.compareTo(b.entryDate));
+                                          } else {
+                                            // placeList.sortByName();
+                                            snapshot.data!.sort(
+                                                (a, b) => a.name.compareTo(b.name));
+                                          }
+                                        });
+                                      },
+                                      items: [
+                                        'Entry date',
+                                        'Alphabetical',
+                                        'Unchecked'
+                                      ].map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Expanded(
+                              key: Key('expanded'),
+                              child: SingleChildScrollView(
+                                child: ListView.builder(
+                                  physics: const BouncingScrollPhysics(),
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemBuilder: (cxt, i) {
+                                    return Dismissible(
+                                      key: UniqueKey(),
+                                      background: Container(
+                                        color: Colors.red,
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              )),
-                        if (!buttonState)
-                          Checkbox(
-                            //CHECKBOX
-                            value: _isChecked[i],
-                            //references _isChecked for value of checkbox
-                            onChanged: (bool? newValue) {
-                              setState(() {
-                                _isChecked[i] = newValue!;
-                              });
-                            },
-                          ),
-                        //if button = expanded
-                        if (!buttonState)
-                          Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: const BorderSide(
-                                  color: Colors.blueGrey,
-                                  width: 0.2,
+                                      ),
+                                      onDismissed: (direction) {
+                                        setState(() {
+                                          print(changeLists()[i].name);
+                                          fsService.removeEntryWithDocumentID(
+                                              changeLists()[i].id);
+                                        });
+                                      },
+                                      child: ListTile(
+                                        title: Row(children: [
+                                          if (buttonState)
+                                            Checkbox(
+                                              //CHECKBOX
+                                              value: snapshot.data![i].checkState,
+                                              //references _isChecked for value of checkbox
+                                              onChanged: (bool? newValue) {
+                                                setState(() {
+                                                  fsService.changeCheckState(
+                                                      snapshot.data![i].id, newValue);
+                                                });
+                                              },
+                                            ),
+                                          if (buttonState)
+                                            Card(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  side: const BorderSide(
+                                                    color: Colors.blueGrey,
+                                                    width: 0.2,
+                                                  ),
+                                                ),
+                                                child: InkWell(
+                                                  splashColor:
+                                                      Colors.blue.withAlpha(30),
+                                                  onTap: () {
+                                                    Navigator.of(context).pushNamed(
+                                                        '/entryView',
+                                                        arguments: {
+                                                          'listName': changeLists()[i]
+                                                              .listName,
+                                                          'name':
+                                                              changeLists()[i].name,
+                                                          'address': changeLists()[i]
+                                                              .address,
+                                                          'phone':
+                                                              changeLists()[i].phone,
+                                                          'website': changeLists()[i]
+                                                              .website,
+                                                          'entry': changeLists()[i]
+                                                              .entryDate,
+                                                          'openingHours':
+                                                              changeLists()[i]
+                                                                  .openingHours,
+                                                          'rating':
+                                                              changeLists()[i].rating,
+                                                          'tagList': changeLists()[i]
+                                                              .tagList,
+                                                          'restaurantNotes':
+                                                              changeLists()[i]
+                                                                  .restaurantNotes,
+                                                          'photoReferences':
+                                                              changeLists()[i]
+                                                                  .photoReferences,
+                                                        });
+                                                  },
+                                                  child: SizedBox(
+                                                    //dimensions that scale with screen size
+                                                    width: SizeConfig
+                                                            .blockSizeHorizontal *
+                                                        70,
+                                                    height:
+                                                        SizeConfig.blockSizeVertical *
+                                                            17,
+                                                    child: Column(
+                                                      children: [
+                                                        Container(
+                                                          //TITLE
+
+                                                          margin:
+                                                              const EdgeInsets.only(
+                                                                  top: 10, left: 15),
+                                                          child: Align(
+                                                              alignment:
+                                                                  Alignment.topLeft,
+                                                              child: Text(
+                                                                  changeLists()[i]
+                                                                      .name)),
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceEvenly,
+                                                          children: [
+                                                            //container in flexible to allow address to wrap
+                                                            Flexible(
+                                                              child: Container(
+                                                                //ADDRESS
+
+                                                                margin:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        top: 10,
+                                                                        left: 15,
+                                                                        right: 15),
+                                                                child: Align(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .topLeft,
+                                                                    child: Text(
+                                                                      changeLists()[i]
+                                                                          .address,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .clip,
+                                                                    )),
+                                                              ),
+                                                            ),
+                                                            //TODO: dates
+                                                            // const Spacer(),
+                                                            // Container(
+                                                            //   //DATE
+                                                            // margin:
+                                                            //       const EdgeInsets.only(top: 10, right: 15),
+                                                            //   child: Align(
+                                                            //       alignment: Alignment.topLeft,
+                                                            //       child: Text("Entry Date: \n" + placeList.getAllPlaces()[i].name)),
+                                                            // )
+                                                          ],
+                                                        ),
+                                                        const Spacer(),
+                                                        Container(
+                                                          margin:
+                                                              const EdgeInsets.only(
+                                                                  top: 10,
+                                                                  left: 15,
+                                                                  right: 15),
+                                                          child: Wrap(
+                                                            direction:
+                                                                Axis.horizontal,
+                                                            spacing: SizeConfig
+                                                                    .safeBlockHorizontal *
+                                                                2,
+                                                            runSpacing: SizeConfig
+                                                                    .safeBlockHorizontal *
+                                                                2,
+                                                            children: [
+                                                              Row(
+                                                                //ROW FOR TAGS
+                                                                children: [
+                                                                  //takes elements from list of tags and creates a chip for each one
+                                                                  for (var tag
+                                                                      in changeLists()[
+                                                                              i]
+                                                                          .tagList)
+                                                                    Chip(
+                                                                      //TODO: fix tags getting overwritten by new entry
+                                                                      label: Text(tag[
+                                                                              'name']
+                                                                          as String),
+                                                                      //TODO: colors for tags
+                                                                    ),
+                                                                ],
+                                                              )
+                                                            ],
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )),
+                                          if (!buttonState)
+                                            Checkbox(
+                                              //CHECKBOX
+                                              value: snapshot.data![i].checkState,
+                                              //references _isChecked for value of checkbox
+                                              onChanged: (bool? newValue) {
+                                                setState(() {
+                                                  // _isChecked[i] = newValue!;
+                                                  fsService.changeCheckState(
+                                                      snapshot.data![i].id, newValue);
+                                                });
+                                              },
+                                            ),
+                                          //if button = expanded
+                                          if (!buttonState)
+                                            Card(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  side: const BorderSide(
+                                                    color: Colors.blueGrey,
+                                                    width: 0.2,
+                                                  ),
+                                                ),
+                                                child: InkWell(
+                                                  splashColor:
+                                                      Colors.blue.withAlpha(30),
+                                                  onTap: () {
+                                                    /*TODO: create route*/
+                                                    debugPrint('Tapped');
+                                                    Navigator.of(context).pushNamed(
+                                                        '/entryView',
+                                                        arguments: {
+                                                          'id': changeLists()[i]
+                                                              .id,
+                                                          'listName': changeLists()[i]
+                                                              .listName,
+                                                          'name':
+                                                              changeLists()[i].name,
+                                                          'address': changeLists()[i]
+                                                              .address,
+                                                          'phone':
+                                                              changeLists()[i].phone,
+                                                          'website': changeLists()[i]
+                                                              .website,
+                                                          'entry': changeLists()[i]
+                                                              .entryDate,
+                                                          'openingHours':
+                                                              changeLists()[i]
+                                                                  .openingHours,
+                                                          'rating':
+                                                              changeLists()[i].rating,
+                                                          'tagList': changeLists()[i]
+                                                              .tagList,
+                                                          'restaurantNotes':
+                                                              changeLists()[i]
+                                                                  .restaurantNotes,
+                                                          'photoReferences':
+                                                              changeLists()[i]
+                                                                  .photoReferences,
+                                                        });
+                                                  },
+                                                  child: SizedBox(
+                                                    //dimensions that scale with screen size
+                                                    width: SizeConfig
+                                                            .blockSizeHorizontal *
+                                                        70,
+                                                    height:
+                                                        SizeConfig.blockSizeVertical *
+                                                            7,
+                                                    child: Column(
+                                                      children: [
+                                                        Container(
+                                                          //TITLE
+                                                          margin:
+                                                              const EdgeInsets.only(
+                                                                  top: 10, left: 15),
+                                                          child: Align(
+                                                              alignment:
+                                                                  Alignment.topLeft,
+                                                              child: Wrap(
+                                                                direction:
+                                                                    Axis.horizontal,
+                                                                spacing: SizeConfig
+                                                                        .safeBlockHorizontal *
+                                                                    2,
+                                                                runSpacing: SizeConfig
+                                                                        .safeBlockHorizontal *
+                                                                    2,
+                                                                children: [
+                                                                  Container(
+                                                                    margin:
+                                                                        const EdgeInsets
+                                                                                .only(
+                                                                            left: 5,
+                                                                            right: 5),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: [
+                                                                        Text(changeLists()[
+                                                                                i]
+                                                                            .name),
+                                                                        Text(changeLists()[
+                                                                                i]
+                                                                            .entryDate),
+                                                                      ],
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              )),
+                                                        ),
+                                                        const Spacer(),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )),
+                                        ]),
+                                      ),
+                                    );
+                                  },
+                                  //limits the number of items to display to prevent overflow
+                                  itemCount: changeLists().length,
                                 ),
                               ),
-                              child: InkWell(
-                                splashColor: Colors.blue.withAlpha(30),
-                                onTap: () {
-                                  /*TODO: create route*/
-                                  debugPrint('Tapped');
-                                  Navigator.of(context)
-                                      .pushNamed('/entryView', arguments: {
-                                    'listName': changeLists()[i].listName,
-                                    'name': changeLists()[i].name,
-                                    'address': changeLists()[i].address,
-                                    'phone': changeLists()[i].phone,
-                                    'website': changeLists()[i].website,
-                                    'entry': changeLists()[i].entryDate,
-                                    'openingHours':
-                                        changeLists()[i].openingHours,
-                                    'rating': changeLists()[i].rating,
-                                    'tagList': changeLists()[i].tagList,
-                                    'restaurantNotes':
-                                        changeLists()[i].restaurantNotes,
-                                    'photoReferences':
-                                        changeLists()[i].photoReferences,
-                                  });
-                                },
-                                child: SizedBox(
-                                  //dimensions that scale with screen size
-                                  width: SizeConfig.blockSizeHorizontal * 70,
-                                  height: SizeConfig.blockSizeVertical * 7,
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        //TITLE
-                                        margin: const EdgeInsets.only(
-                                            top: 10, left: 15),
-                                        child: Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Wrap(
-                                              direction: Axis.horizontal,
-                                              spacing: SizeConfig
-                                                      .safeBlockHorizontal *
-                                                  2,
-                                              runSpacing: SizeConfig
-                                                      .safeBlockHorizontal *
-                                                  2,
-                                              children: [
-                                                Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 5, right: 5),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(changeLists()[i]
-                                                          .name),
-                                                      Text(changeLists()[i]
-                                                          .entryDate),
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            )),
-                                      ),
-                                      const Spacer(),
-                                    ],
-                                  ),
-                                ),
-                              )),
-                      ]),
-                    ),
-                  );
-                },
-                //limits the number of items to display to prevent overflow
-                itemCount: changeLists().length,
-              ),
-            ),
-          ]);
-        });
+                            ),
+                          ]);
+                  });
+            });
+      }
+    );
   }
 
   @override

@@ -6,16 +6,24 @@ import '../models/place.dart';
 
 class FirestoreService {
   addPlace(
+      id,
       listName,
       placeID,
       restaurantName,
       restaurantAddress,
       restaurantPhone,
       restaurantWebsite,
+      restaurantEntryDate,
+      restaurantRating,
       checkState,
       List<dynamic> restaurantOpeningHours,
-      List<String> photoReferences) {
-    return FirebaseFirestore.instance.collection('places').add({
+      List<dynamic> restaurantTags,
+      String restaurantNotes,
+      List<dynamic> photoReferences) {
+    String ids =
+        FirebaseFirestore.instance.collection('places').doc().id.toString();
+    return FirebaseFirestore.instance.collection('places').doc(ids).set({
+      'id': ids,
       'listName': listName,
       'placeID': placeID,
       'name': restaurantName,
@@ -24,14 +32,23 @@ class FirestoreService {
       'website': restaurantWebsite,
       'checkState': checkState,
       'openingHours': restaurantOpeningHours,
+      'tagList': restaurantTags,
+      'restaurantNotes': restaurantNotes,
       'photoReferences': photoReferences,
     });
   }
 
-  changeCheckState(placeID, checkState) {
+  addList(String id, String listName) {
+    return FirebaseFirestore.instance.collection('lists').add({
+      'id': id,
+      'listName': listName,
+    });
+  }
+
+  changeCheckState(documentID, checkState) {
     return FirebaseFirestore.instance
         .collection('places')
-        .doc(placeID)
+        .doc(documentID)
         .update({'checkState': checkState});
   }
 
@@ -39,35 +56,38 @@ class FirestoreService {
     return FirebaseFirestore.instance.collection('places').doc(id).delete();
   }
 
-  //removeEntry with entry name
-  removeEntryWithName(name) {
+  //removeEntry with documentID
+  removeEntryWithDocumentID(documentID) {
     return FirebaseFirestore.instance
         .collection('places')
-        .where('name', isEqualTo: name)
-        .get()
-        .then((QuerySnapshot snapshot) {
-      snapshot.docs.forEach((doc) {
-        doc.reference.delete();
-      });
-    });
+        .doc(documentID)
+        .delete();
   }
 
   //stream gets all places from firestore
   Stream<List<Place>> getPlaces() {
-    return FirebaseFirestore.instance.collection('places').snapshots().map(
-        (snapshot) => snapshot.docs
-            .map<Place>((doc) => Place.fromMap(doc.data(), doc.id))
-            .toList());
+    return FirebaseFirestore.instance.collection('places').get().asStream().map(
+          (snapshot) => snapshot.docs
+              .map((doc) => Place.fromMap(doc.data(), doc.id))
+              .toList(),
+        );
   }
 
   //stream gets all lists from firestore
-  Stream<List<Lists>> getLists() {
+  Stream<List<String>> getLists() {
     return FirebaseFirestore.instance.collection('lists').snapshots().map(
         (snapshot) => snapshot.docs
-            .map<Lists>((doc) => Lists.fromMap(doc.data(), doc.id))
+            .map<String>((doc) => doc.data()['listName'])
             .toList());
   }
 
+  //stream get all lists from firestore
+  // Stream<List<dynamic>> getLists() {
+  //   return FirebaseFirestore.instance.collection('lists').snapshots().map(
+  //       (snapshot) => snapshot.docs
+  //           .map<String>((doc) => Lists.fromMap(doc.data(), doc.id))
+  //           .toList());
+  // }
   //stream gets all tags from firestore
   Stream<List<Tag>> getTags() {
     return FirebaseFirestore.instance.collection('tags').snapshots().map(
@@ -95,6 +115,21 @@ class FirestoreService {
       'checkState': checkState,
       'restaurantPlaceId': restaurantPlaceId,
       'restaurantOpeningHours': restaurantOpeningHours,
+    });
+  }
+
+  //checks for duplicate entries in firestore
+  checkForDuplicate(name) {
+    return FirebaseFirestore.instance
+        .collection('places')
+        .where('name', isEqualTo: name)
+        .get()
+        .then((QuerySnapshot snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
     });
   }
 }

@@ -1,8 +1,9 @@
 
 class Lists{
-  String listName;
-  Lists({required this.listName});
+  String id, listName;
+  Lists({required this.id ,required this.listName});
 
   Lists.fromMap(Map<String, dynamic> snapshot, String id) :
-        listName = snapshot['listName'] ?? '';
+    id = id,
+    listName = snapshot['listName'];
 }
