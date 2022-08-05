@@ -37,11 +37,11 @@ class _AddScreenState extends State<AddScreen> {
   String tagName = '';
   String tagColor = '';
   List<dynamic> restaurantHours = [];
-  List<String> photoReferences = [];
+  List<dynamic> photoReferences = [];
   String restaurantId = '';
   late List<String> autoCompleteData = [];
 
-  void saveListForm(String id) {
+  void saveListForm() {
     bool isValid = _formKey2.currentState!.validate();
 
     if (isValid) {
@@ -49,7 +49,7 @@ class _AddScreenState extends State<AddScreen> {
       // print('YOUIUUU $createListName');
       setState(() {
         FirestoreService fsService = FirestoreService();
-        fsService.addList(id, createListName);
+        fsService.addList(createListName);
         Navigator.of(context).pop();
         _formKey2.currentState!.reset();
         createListName = '';
@@ -140,19 +140,19 @@ class _AddScreenState extends State<AddScreen> {
               );
             });
 
-              _formKey.currentState!.reset();
-              restaurantName = '';
-              restaurantAddress = '';
-              restaurantPhone = '';
-              restaurantWebsite = '';
-              restaurantNotes = '';
-              restaurantRating = '';
-              restaurantTags = [];
-              selectedTags = [];
-              restaurantHours = [];
-              photoReferences = [];
-              restaurantId = '';
-              tagList.clearSelectedTags();
+            _formKey.currentState!.reset();
+            restaurantName = '';
+            restaurantAddress = '';
+            restaurantPhone = '';
+            restaurantWebsite = '';
+            restaurantNotes = '';
+            restaurantRating = '';
+            restaurantTags = [];
+            selectedTags = [];
+            restaurantHours = [];
+            photoReferences = [];
+            restaurantId = '';
+            tagList.clearSelectedTags();
 
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text('Saved!'),
@@ -173,7 +173,7 @@ class _AddScreenState extends State<AddScreen> {
     return StreamBuilder<List<Place>>(
         stream: fsService.getPlaces(),
         builder: (context, snapshot1) {
-          return StreamBuilder<List<String>>(
+          return StreamBuilder<List<Lists>>(
               stream: fsService.getLists(),
               builder: (context, snapshot) {
                 print('snapshot.data: ${snapshot.data}');
@@ -277,7 +277,7 @@ class _AddScreenState extends State<AddScreen> {
                                                           child: Text('Save'),
                                                           onPressed: () {
                                                             setState(() {
-                                                              saveListForm(id);
+                                                              saveListForm();
                                                             });
                                                           },
                                                         ),
@@ -337,6 +337,7 @@ class _AddScreenState extends State<AddScreen> {
                                             LocationService()
                                                 .getPlace(selected.place_id)
                                                 .then((value) {
+                                                  print('value: $value["result"]["photos"]');
                                               setState(() {
                                                 //gets list of photo_references from google api
 
@@ -361,6 +362,7 @@ class _AddScreenState extends State<AddScreen> {
                                                         .map((photo) => photo[
                                                             'photo_reference'])
                                                         .toList();
+                                                print(photoReferences);
                                                 restaurantId = AllEntries()
                                                     .extractPlaceId(value);
                                               });

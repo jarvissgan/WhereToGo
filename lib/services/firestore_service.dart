@@ -20,10 +20,10 @@ class FirestoreService {
       List<dynamic> restaurantTags,
       String restaurantNotes,
       List<dynamic> photoReferences) {
-    String ids =
+    String idPlace =
         FirebaseFirestore.instance.collection('places').doc().id.toString();
-    return FirebaseFirestore.instance.collection('places').doc(ids).set({
-      'id': ids,
+    return FirebaseFirestore.instance.collection('places').doc(idPlace).set({
+      'id': idPlace,
       'listName': listName,
       'placeID': placeID,
       'name': restaurantName,
@@ -37,10 +37,10 @@ class FirestoreService {
       'photoReferences': photoReferences,
     });
   }
-
-  addList(String id, String listName) {
-    return FirebaseFirestore.instance.collection('lists').add({
-      'id': id,
+  String idLists =
+  FirebaseFirestore.instance.collection('places').doc().id.toString();
+  addList(String listName) {
+    return FirebaseFirestore.instance.collection('lists').doc(idLists).set({
       'listName': listName,
     });
   }
@@ -64,6 +64,14 @@ class FirestoreService {
         .delete();
   }
 
+  //removeList with documentID
+  removeListWithDocumentID(documentID) {
+    return FirebaseFirestore.instance
+        .collection('lists')
+        .doc(documentID)
+        .delete();
+  }
+
   //stream gets all places from firestore
   Stream<List<Place>> getPlaces() {
     return FirebaseFirestore.instance.collection('places').get().asStream().map(
@@ -74,11 +82,10 @@ class FirestoreService {
   }
 
   //stream gets all lists from firestore
-  Stream<List<String>> getLists() {
+  Stream<List<Lists>> getLists() {
     return FirebaseFirestore.instance.collection('lists').snapshots().map(
         (snapshot) => snapshot.docs
-            .map<String>((doc) => doc.data()['listName'])
-            .toList());
+            .map<Lists>((doc) => Lists.fromMap(doc.data(), doc.id)).toList());
   }
 
   //stream get all lists from firestore
@@ -97,24 +104,25 @@ class FirestoreService {
   }
 
   editEntry(
-      id,
-      restaurantName,
-      restaurantAddress,
-      restaurant,
+    id,
+    restaurantName,
+    restaurantAddress,
+    restaurantWebsite,
       restaurantNumber,
-      restaurantWebsite,
-      checkState,
-      restaurantPlaceId,
-      restaurantOpeningHours) {
+      restaurantEntryDate,
+    restaurantOpeningHours,
+    List tagList,
+    String restaurantNotes,
+  ) {
     return FirebaseFirestore.instance.collection('places').doc(id).update({
-      'restaurantName': restaurantName,
-      'restaurantAddress': restaurantAddress,
-      'restaurant': restaurant,
-      'restaurantNumber': restaurantNumber,
-      'restaurantWebsite': restaurantWebsite,
-      'checkState': checkState,
-      'restaurantPlaceId': restaurantPlaceId,
-      'restaurantOpeningHours': restaurantOpeningHours,
+      'name': restaurantName,
+      'address': restaurantAddress,
+      'website': restaurantWebsite,
+      'number': restaurantNumber,
+      'entryDate': restaurantEntryDate,
+      'openingHours': restaurantOpeningHours,
+      'tagList': tagList,
+      'restaurantNotes': restaurantNotes,
     });
   }
 
