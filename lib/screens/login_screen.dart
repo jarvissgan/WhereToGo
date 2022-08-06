@@ -4,6 +4,8 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:jarlist/main.dart';
 import 'package:jarlist/screens/register_screen.dart';
 import 'package:jarlist/services/auth_service.dart';
+import 'package:jarlist/widgets/forget_password.dart';
+import 'package:jarlist/widgets/google_button.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
@@ -58,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Container(
                 height: MediaQuery.of(context).size.height / 100 * 25,
-                margin: EdgeInsets.only(right: 50, left: 50),
+                margin: EdgeInsets.only(right: 50, left: 30),
                 child: const Align(
                   alignment: Alignment.bottomLeft,
                   //TODO: lower the text
@@ -67,178 +69,88 @@ class _LoginScreenState extends State<LoginScreen> {
                           TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
                 ),
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 100 * 50,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 30, right: 30),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('Email: \t\t\t\t\t\t\t\t'),
-                            SizedBox(
-                              width:
-                                  MediaQuery.of(context).size.width / 100 * 50,
-                              child: TextFormField(
-                                //email
-                                keyboardType: TextInputType.emailAddress,
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Please enter an email';
-                                  } else if (!value.contains('@')) {
-                                    return 'Please enter a valid email';
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                                onSaved: (value) {
-                                  _email = value;
-                                },
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.all(8),
-                                ),
-                              ),
-                            ),
-                          ]),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 30, right: 30, top: 20),
+                    child: TextFormField(
+                      //email
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please enter an email';
+                        } else if (!value.contains('@')) {
+                          return 'Please enter a valid email';
+                        } else {
+                          return null;
+                        }
+                      },
+                      onSaved: (value) {
+                        _email = value;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Email',
+                        // isDense: true,
+                        // contentPadding: EdgeInsets.all(8),
+                      ),
                     ),
-                    Container(
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 30, right: 30, top: 20),
+                    child: TextFormField(
+                      obscureText: true,
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please enter a password';
+                        } else if (value.length < 6) {
+                          return 'Please enter a password with at least 6 characters';
+                        } else {
+                          return null;
+                        }
+                      },
+                      onSaved: (value) {
+                        _password = value;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Password',
+                        // isDense: true,
+                        // contentPadding: EdgeInsets.all(8),
+                      ),
+                    ),
+                  ),
+                  ForgetPassword(),
+                  //TODO: Login with Google
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.only(left: 30, right: 30, top: 30),
+                    child: ElevatedButton(
+                      child: Text('Login'),
+                      onPressed: () {
+                        login();
+                      },
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.only(left: 30, right: 30, top: 10),
+                    child: ElevatedButton(
+                      child: Text('Register'),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(RegisterScreen.routeName);
+                      },
+                    ),
+                  ),
+                  Container(
                       margin: EdgeInsets.only(left: 30, right: 30, top: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text('Password: '),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width / 100 * 50,
-                            child: TextFormField(
-                              obscureText: true,
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Please enter a password';
-                                } else if (value.length < 6) {
-                                  return 'Please enter a password with at least 6 characters';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              onSaved: (value) {
-                                _password = value;
-                              },
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                isDense: true,
-                                contentPadding: EdgeInsets.all(8),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 50, right: 50, top: 10),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            RichText(
-                              text: TextSpan(
-                                  text: 'Forgot Password? ',
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      decoration: TextDecoration.underline),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      //dialog box to reset password
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                                title: Text('Reset Password'),
-                                                content: TextField(
-                                                  decoration: InputDecoration(
-                                                    labelText: 'Email',
-                                                  ),
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                    child: Text('Reset'),
-                                                    onPressed: () {
-                                                      //dialog to inform user that password has been reset
-                                                      showDialog(
-                                                          context: context,
-                                                          builder: (context) =>
-                                                              AlertDialog(
-                                                                title: Text(
-                                                                    'Password Reset'),
-                                                                content: Text(
-                                                                    'Password reset email sent'),
-                                                                actions: [
-                                                                  TextButton(
-                                                                    child: Text(
-                                                                        'Ok'),
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator.pop(
-                                                                          context);
-                                                                      Navigator.pop(
-                                                                          context);
-                                                                    },
-                                                                  )
-                                                                ],
-                                                              ));
-                                                    },
-                                                  )
-                                                ],
-                                              ));
-                                    }),
-                            ),
-                          ]),
-                    ),
-                    //TODO: Login with Google
-                    //TODO: register button
-                    //login with google with image
-                    // Container(
-                    //   margin: EdgeInsets.only(left: 30, right: 30, top: 30),
-                    //   child: SignInButton(
-                    //     Buttons.GoogleD,
-                    //     mini: true,
-                    //     onPressed: () {
-                    //       // _showButtonPressDialog(context, 'Google');
-                    //     },
-                    //   ),
-                    // ),
-                    Container(
-                      margin: EdgeInsets.only(left: 30, right: 30, top: 30),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width / 100 * 30,
-                        height: MediaQuery.of(context).size.width / 100 * 10,
-                        child: ElevatedButton(
-                          child: Text('Login'),
-                          onPressed: () {
-                            login();
-                          },
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 30, right: 30, top: 30),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width / 100 * 30,
-                        height: MediaQuery.of(context).size.width / 100 * 10,
-                        child: ElevatedButton(
-                          child: Text('Register'),
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(RegisterScreen.routeName);
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                      child: Text('OR')),
+
+                  //login with google
+                  GoogleButton(),
+                ],
               ),
             ],
           ),

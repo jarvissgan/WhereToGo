@@ -181,12 +181,14 @@ class _AddScreenState extends State<AddScreen> {
                     builder: (context, snapshotTags) {
                       // print('snapshot.data: ${snapshotList.data}');
                       List<String>? dropDownList = [];
-                      for (var list in snapshotList.data!) {
-                        dropDownList.add(list.listName);
-                      }
-                      dropDownList.add('Create a new list');
 
                       if (snapshotList.data != null) {
+
+                        for (var list in snapshotList.data!) {
+                          dropDownList.add(list.listName);
+                        }
+                        dropDownList.add('Create a new list');
+
                         return snapshotList.connectionState ==
                               ConnectionState.waiting
                           ? const Center(child: CircularProgressIndicator())
@@ -340,8 +342,8 @@ class _AddScreenState extends State<AddScreen> {
                                               LocationService()
                                                   .getPlace(selected.place_id)
                                                   .then((value) {
-                                                print(
-                                                    'value: $value["result"]["photos"]');
+                                                // print(
+                                                //     'value: $value["result"]["photos"]');
                                                 setState(() {
                                                   //gets list of photo_references from google api
 
@@ -372,7 +374,7 @@ class _AddScreenState extends State<AddScreen> {
                                                       .map((photo) => photo[
                                                           'photo_reference'])
                                                       .toList();
-                                                  print(photoReferences);
+                                                  // print(photoReferences);
                                                   restaurantId = AllEntries()
                                                       .extractPlaceId(value);
                                                 });
@@ -607,7 +609,7 @@ class _AddScreenState extends State<AddScreen> {
                                           ]),
                                         ),
 
-                                        Spacer(),
+                                        // Spacer(),
                                         //pushes notes box and buttons to bottom
 
                                         Container(
@@ -642,89 +644,89 @@ class _AddScreenState extends State<AddScreen> {
                                                 maxLines: 4,
                                               ),
                                             ])),
-                                        Container(
-                                            //container for tags
-                                            //TODO: change font size
-                                            alignment: Alignment.centerLeft,
-                                            margin: const EdgeInsets.only(
-                                                top: 5,
-                                                left: 30,
-                                                right: 30,
-                                                bottom: 10),
-                                            child: Row(children: [
-                                              //TAGS
-                                              //TODO: add horizontal listview of tags, and make it tappable
-                                              //TODO: add tag dialog box, and scroll list of existing tags
-                                              const Text('Tags: '),
-
-                                              Expanded(
-                                                child: Wrap(
-                                                  direction: Axis.horizontal,
-                                                  spacing: SizeConfig
-                                                          .safeBlockHorizontal *
-                                                      2,
-                                                  runSpacing: SizeConfig
-                                                          .safeBlockHorizontal *
-                                                      2,
-                                                  children: [
-                                                    for (var tag
-                                                        in tagList.selectedTags)
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          showDialog(
-                                                            context: context,
-                                                            builder:
-                                                                (context) =>
-                                                                    TagDialog(),
-                                                          );
-                                                        },
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                            // color: tag.color,
-                                                          ),
-                                                          child: Chip(
-                                                            //get name from map and set as text
-                                                            label: Text(
-                                                                tag['name']),
-                                                            // onDeleted: () {
-                                                            //   tagList.removeTag(tag);
-                                                            //   setState(() {
-                                                            //     restaurantTags = tagList.getAllTags();
-                                                            //   });
-                                                            // },
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    InputChip(
-                                                      label: Text('Add Tags'),
-                                                      onPressed: () {
-                                                        //utilize inputchip to add tags
-                                                        showDialog(
-                                                            barrierDismissible:
-                                                                false,
-                                                            context: context,
-                                                            builder:
-                                                                (BuildContext
-                                                                    context) {
-                                                              //WillPopScope() to prevent taps outside dialog from closing dialog
-                                                              return WillPopScope(
-                                                                  onWillPop: () =>
-                                                                      Future.value(
-                                                                          false),
-                                                                  child:
-                                                                      TagDialog());
-                                                            });
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ])),
+                                        // Container(
+                                        //     //container for tags
+                                        //     //TODO: change font size
+                                        //     alignment: Alignment.centerLeft,
+                                        //     margin: const EdgeInsets.only(
+                                        //         top: 5,
+                                        //         left: 30,
+                                        //         right: 30,
+                                        //         bottom: 10),
+                                        //     child: Row(children: [
+                                        //       //TAGS
+                                        //       //TODO: add horizontal listview of tags, and make it tappable
+                                        //       //TODO: add tag dialog box, and scroll list of existing tags
+                                        //       const Text('Tags: '),
+                                        //
+                                        //       Expanded(
+                                        //         child: Wrap(
+                                        //           direction: Axis.horizontal,
+                                        //           spacing: SizeConfig
+                                        //                   .safeBlockHorizontal *
+                                        //               2,
+                                        //           runSpacing: SizeConfig
+                                        //                   .safeBlockHorizontal *
+                                        //               2,
+                                        //           children: [
+                                        //             for (var tag
+                                        //                 in tagList.selectedTags)
+                                        //               GestureDetector(
+                                        //                 onTap: () {
+                                        //                   showDialog(
+                                        //                     context: context,
+                                        //                     builder:
+                                        //                         (context) =>
+                                        //                             TagDialog(),
+                                        //                   );
+                                        //                 },
+                                        //                 child: Container(
+                                        //                   decoration:
+                                        //                       BoxDecoration(
+                                        //                     borderRadius:
+                                        //                         BorderRadius
+                                        //                             .circular(
+                                        //                                 10),
+                                        //                     // color: tag.color,
+                                        //                   ),
+                                        //                   child: Chip(
+                                        //                     //get name from map and set as text
+                                        //                     label: Text(
+                                        //                         tag['name']),
+                                        //                     // onDeleted: () {
+                                        //                     //   tagList.removeTag(tag);
+                                        //                     //   setState(() {
+                                        //                     //     restaurantTags = tagList.getAllTags();
+                                        //                     //   });
+                                        //                     // },
+                                        //                   ),
+                                        //                 ),
+                                        //               ),
+                                        //             InputChip(
+                                        //               label: Text('Add Tags'),
+                                        //               onPressed: () {
+                                        //                 //utilize inputchip to add tags
+                                        //                 showDialog(
+                                        //                     barrierDismissible:
+                                        //                         false,
+                                        //                     context: context,
+                                        //                     builder:
+                                        //                         (BuildContext
+                                        //                             context) {
+                                        //                       //WillPopScope() to prevent taps outside dialog from closing dialog
+                                        //                       return WillPopScope(
+                                        //                           onWillPop: () =>
+                                        //                               Future.value(
+                                        //                                   false),
+                                        //                           child:
+                                        //                               TagDialog());
+                                        //                     });
+                                        //               },
+                                        //             ),
+                                        //           ],
+                                        //         ),
+                                        //       ),
+                                        //     ])),
 
                                         Container(
                                           margin: const EdgeInsets.only(

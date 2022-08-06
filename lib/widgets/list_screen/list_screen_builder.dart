@@ -577,5 +577,5 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
 
   @override
   // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => false;
 }

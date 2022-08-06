@@ -103,12 +103,13 @@ class FirestoreService {
   changeCheckState(documentID, checkState) {
     AuthService authService = AuthService();
     String uid = authService.getCurrentUserUID();
+    String id = getIDPlace(uid);
 
     return FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
         .collection('places')
-        .doc(getIDPlace(uid))
+        .doc(documentID)
         .update({'checkState': checkState});
   }
 
@@ -303,6 +304,11 @@ class FirestoreService {
         snapshot.reference.delete();
       }
     });
+  }
+
+  //deletes user from firestore and related collections
+  deleteUser(String id) {
+    return FirebaseFirestore.instance.collection('users').doc(id).delete();
   }
 
 }

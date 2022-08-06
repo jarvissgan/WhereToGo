@@ -40,6 +40,7 @@ class _EntryViewState extends State<EntryView> {
     List tagList = arguments['tagList'] as List;
     String website = arguments['website'] as String;
     String phone = arguments['phone'] as String;
+    // FirestoreService fsService = FirestoreService();
 
     void saveForm() {
       bool isValid = _formKey.currentState!.validate();
@@ -378,8 +379,7 @@ class _EntryViewState extends State<EntryView> {
                                             onPressed: () {
                                               //delete entry
                                               setState(() {
-                                                placeList.removePlace(
-                                                    arguments['name']);
+                                                fsService.removeEntryWithDocumentID(arguments['documentID'] as String);
                                                 //navigate to list view by popping
                                                 Navigator.of(context).pop();
                                                 Navigator.of(context).pop();
