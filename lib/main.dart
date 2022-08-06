@@ -11,6 +11,7 @@ import 'package:jarlist/screens/login_screen.dart';
 import 'package:jarlist/screens/home_screen.dart';
 import 'package:jarlist/screens/register_screen.dart';
 import 'package:jarlist/screens/settings_screen.dart';
+import 'package:jarlist/services/firestore_service.dart';
 import 'package:provider/provider.dart';
 
 import 'services/auth_service.dart';
@@ -27,11 +28,6 @@ void main() async {
     statusBarColor: Colors.transparent,
   ));
 }
-
-List<String> items = List.generate(
-  50,
-  (i) => "List $i",
-);
 
 class MyApp extends StatelessWidget {
   AuthService authService = AuthService();
@@ -54,15 +50,21 @@ class MyApp extends StatelessWidget {
       ],
       child: FutureBuilder(
           future: Firebase.initializeApp(),
-          builder: (context, snapshot) => StreamBuilder<User?>(
+          builder: (context, snapshot) => snapshot.connectionState == ConnectionState.waiting ? Center(child: CircularProgressIndicator()) :
+              StreamBuilder<User?>(
               stream: authService.getAuthUser(),
               builder: (context, snapshot) {
+                // FirestoreService firestoreService = FirestoreService();
+                // FirestoreService.uid = snapshot.data!.uid;
+
                 return MaterialApp(
                   theme: ThemeData(
                     brightness: Brightness.light,
                     //TODO: dark mode (change text color)
                   ),
-                  home: LoginScreen(),
+                  home: snapshot.connectionState == ConnectionState.waiting ? Center(child: CircularProgressIndicator()) :
+                      snapshot.hasData ? MainScreen() : LoginScreen(),
+                    // LoginScreen(),
                   // initialRoute: HomeWidget.routeName,
                   routes: {
                     ListScreen.routeName: (_) => ListScreen(),

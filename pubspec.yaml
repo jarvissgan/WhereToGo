@@ -47,6 +47,22 @@ dependencies:
   searchfield: ^0.6.7
   flutter_signin_button: ^2.0.0
   carousel_slider: ^4.1.1
+  flutter_launcher_icons: ^0.9.2
+  flutter_native_splash: ^2.1.2+1
+
+flutter_native_splash:
+  android: true
+  ios: false
+  image: 'images/logo.png'
+  color: '#ffffff'
+
+flutter_icons:
+  android: true
+  ios: false
+  image_path: 'images/1024.png'
+  adaptive_icon_background: '#000000'
+  adaptive_icon_foreground: 'images/1024.png'
+
 
 dev_dependencies:
   flutter_test:
@@ -71,8 +87,11 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+     - images/google_logo.png
+     - images/logo.png
+     - images/1024.png
+#     - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -86,6 +105,59 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+#  fonts:
+#    - family: 'Roboto'
+#      fonts:
+#        - asset: fonts/Roboto-Black.ttf
+#          weight: 900
+#        - asset: fonts/Roboto-BlackItalic.ttf
+#          weight: 900
+#          style: italic
+#        - asset: fonts/Roboto-Bold.ttf
+#          weight: 700
+#        - asset: fonts/Roboto-BoldItalic.ttf
+#          weight: 700
+#          style: italic
+#        - asset: fonts/Roboto-Italic.ttf
+#          style: italic
+#        - asset: fonts/Roboto-Light.ttf
+#          weight: 300
+#        - asset: fonts/Roboto-LightItalic.ttf
+#          weight: 300
+#          style: italic
+#        - asset: fonts/Roboto-Medium.ttf
+#          weight: 500
+#        - asset: fonts/Roboto-MediumItalic.ttf
+#          weight: 500
+#          style: italic
+#        - asset: fonts/Roboto-Regular.ttf
+#          weight: 400
+#        - asset: fonts/Roboto-Thin.ttf
+#          weight: 100
+#        - asset: fonts/Roboto-ThinItalic.ttf
+#          weight: 100
+#          style: italic
+#        - asset: fonts/RobotoCondensed-Bold.ttf
+#          weight: 700
+#        - asset: fonts/RobotoCondensed-BoldItalic.ttf
+#          weight: 700
+#          style: italic
+#        - asset: fonts/RobotoCondensed-Italic.ttf
+#          style: italic
+#        - asset: fonts/RobotoCondensed-Light.ttf
+#          weight: 300
+#        - asset: fonts/RobotoCondensed-LightItalic.ttf
+#          weight: 300
+#          style: italic
+#        - asset: fonts/RobotoCondensed-Regular.ttf
+#          weight: 400
+#        - asset: fonts/RobotoCondensed-Thin.ttf
+#          weight: 100
+#        - asset: fonts/RobotoCondensed-ThinItalic.ttf
+#          weight: 100
+#          style: italic
+#        - asset: fonts/RobotoMon
+
   # fonts:
   #   - family: Schyler
   #     fonts:

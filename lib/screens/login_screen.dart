@@ -34,6 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
         content: Text('Logged in successfully!'),
         duration: Duration(seconds: 1),
       ));
+      Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
     }).catchError((error) {
       FocusScope.of(context).unfocus();
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -217,8 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: ElevatedButton(
                           child: Text('Login'),
                           onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(MainScreen.routeName);
+                            login();
                           },
                         ),
                       ),

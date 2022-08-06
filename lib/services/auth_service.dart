@@ -14,7 +14,10 @@ class AuthService {
     return FirebaseAuth.instance.authStateChanges();
   }
   logout(){
-    FirebaseAuth.instance.signOut();
+    return FirebaseAuth.instance.signOut();
+  }
+  String getCurrentUserUID() {
+    return FirebaseAuth.instance.currentUser!.uid;
   }
 
 }

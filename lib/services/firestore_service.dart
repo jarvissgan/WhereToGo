@@ -1,10 +1,47 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jarlist/models/list.dart';
 import 'package:jarlist/models/tag.dart';
+import 'package:jarlist/services/auth_service.dart';
 
 import '../models/place.dart';
 
 class FirestoreService {
+  // String uid = FirestoreService.uid;
+  String idPlace =
+      FirebaseFirestore.instance.collection('places').doc().id.toString();
+
+  // String idLists = FirebaseFirestore.instance.collection('users').doc().collection('lists').doc().id.toString();
+
+  String getIDPlace(uid) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('places')
+        .doc()
+        .id
+        .toString();
+  }
+
+  String getIDList(uid) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('lists')
+        .doc()
+        .id
+        .toString();
+  }
+
+  String getIDTag(uid) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('tags')
+        .doc()
+        .id
+        .toString();
+  }
+
   addPlace(
       id,
       listName,
@@ -20,10 +57,18 @@ class FirestoreService {
       List<dynamic> restaurantTags,
       String restaurantNotes,
       List<dynamic> photoReferences) {
-    String idPlace =
-        FirebaseFirestore.instance.collection('places').doc().id.toString();
-    return FirebaseFirestore.instance.collection('places').doc(idPlace).set({
-      'id': idPlace,
+
+    AuthService authService = AuthService();
+    String uid = authService.getCurrentUserUID();
+    String id = getIDPlace(uid);
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('places')
+        .doc(id)
+        .set({
+      'id': id,
       'listName': listName,
       'placeID': placeID,
       'name': restaurantName,
@@ -37,28 +82,55 @@ class FirestoreService {
       'photoReferences': photoReferences,
     });
   }
-  String idLists =
-  FirebaseFirestore.instance.collection('places').doc().id.toString();
+
   addList(String listName) {
-    return FirebaseFirestore.instance.collection('lists').doc(idLists).set({
+    AuthService authService = AuthService();
+    String uid = authService.getCurrentUserUID();
+
+    String id = getIDList(uid);
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('lists')
+        .doc(id)
+        .set({
+      'id': id,
       'listName': listName,
     });
   }
 
   changeCheckState(documentID, checkState) {
+    AuthService authService = AuthService();
+    String uid = authService.getCurrentUserUID();
+
     return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
         .collection('places')
-        .doc(documentID)
+        .doc(getIDPlace(uid))
         .update({'checkState': checkState});
   }
 
-  removeEntry(id) {
-    return FirebaseFirestore.instance.collection('places').doc(id).delete();
-  }
+  // removeEntry(id) {
+  //   AuthService authService = AuthService();
+  //   String uid = authService.getCurrentUserUID();
+  //
+  //   return FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(uid)
+  //       .collection('places')
+  //       .doc(id).delete();
+  // }
 
   //removeEntry with documentID
   removeEntryWithDocumentID(documentID) {
+    AuthService authService = AuthService();
+    String uid = authService.getCurrentUserUID();
+
     return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
         .collection('places')
         .doc(documentID)
         .delete();
@@ -66,7 +138,12 @@ class FirestoreService {
 
   //removeList with documentID
   removeListWithDocumentID(documentID) {
+    AuthService authService = AuthService();
+    String uid = authService.getCurrentUserUID();
+
     return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
         .collection('lists')
         .doc(documentID)
         .delete();
@@ -74,7 +151,16 @@ class FirestoreService {
 
   //stream gets all places from firestore
   Stream<List<Place>> getPlaces() {
-    return FirebaseFirestore.instance.collection('places').get().asStream().map(
+    AuthService authService = AuthService();
+    String uid = authService.getCurrentUserUID();
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('places')
+        .get()
+        .asStream()
+        .map(
           (snapshot) => snapshot.docs
               .map((doc) => Place.fromMap(doc.data(), doc.id))
               .toList(),
@@ -83,9 +169,17 @@ class FirestoreService {
 
   //stream gets all lists from firestore
   Stream<List<Lists>> getLists() {
-    return FirebaseFirestore.instance.collection('lists').snapshots().map(
-        (snapshot) => snapshot.docs
-            .map<Lists>((doc) => Lists.fromMap(doc.data(), doc.id)).toList());
+    AuthService authService = AuthService();
+    String uid = authService.getCurrentUserUID();
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('lists')
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map<Lists>((doc) => Lists.fromMap(doc.data(), doc.id))
+            .toList());
   }
 
   //stream get all lists from firestore
@@ -97,10 +191,36 @@ class FirestoreService {
   // }
   //stream gets all tags from firestore
   Stream<List<Tag>> getTags() {
-    return FirebaseFirestore.instance.collection('tags').snapshots().map(
-        (snapshot) => snapshot.docs
+    AuthService authService = AuthService();
+    String uid = authService.getCurrentUserUID();
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('tags')
+        .snapshots()
+        .map((snapshot) => snapshot.docs
             .map<Tag>((doc) => Tag.fromMap(doc.data(), doc.id))
             .toList());
+  }
+
+  String idTags =
+      FirebaseFirestore.instance.collection('tags').doc().id.toString();
+
+  createTag(String tagName) {
+    AuthService authService = AuthService();
+    String uid = authService.getCurrentUserUID();
+
+    String id = getIDTag(uid);
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('tags')
+        .doc(id)
+        .set({
+      'tagName': tagName,
+    });
   }
 
   editEntry(
@@ -108,13 +228,16 @@ class FirestoreService {
     restaurantName,
     restaurantAddress,
     restaurantWebsite,
-      restaurantNumber,
-      restaurantEntryDate,
+    restaurantNumber,
+    restaurantEntryDate,
     restaurantOpeningHours,
     List tagList,
     String restaurantNotes,
   ) {
-    return FirebaseFirestore.instance.collection('places').doc(id).update({
+    AuthService authService = AuthService();
+    String uid = authService.getCurrentUserUID();
+
+    return FirebaseFirestore.instance.collection('users').doc(uid).collection('places').doc(getIDPlace(uid)).update({
       'name': restaurantName,
       'address': restaurantAddress,
       'website': restaurantWebsite,
@@ -128,7 +251,13 @@ class FirestoreService {
 
   //checks for duplicate entries in firestore
   checkForDuplicate(name) {
+    AuthService authService = AuthService();
+    String uid = authService.getCurrentUserUID();
+
+    // print(uid + 'UID');
     return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
         .collection('places')
         .where('name', isEqualTo: name)
         .get()
@@ -140,4 +269,40 @@ class FirestoreService {
       }
     });
   }
+
+  //creates user in firestore and related collections
+  createUser(String id, String email, String name) {
+
+    return FirebaseFirestore.instance.collection('users').doc(id).set({
+      'id': id,
+      'email': email,
+      'name': name,
+    });
+
+  }
+  onUserCreated(uid){
+    FirebaseFirestore.instance.collection('users').doc(uid).collection('places').doc().set({});
+    FirebaseFirestore.instance.collection('users').doc(uid).collection('lists').doc().set({});
+    FirebaseFirestore.instance.collection('users').doc(uid).collection('tags').doc().set({});
+  }
+  deleteCreated(uid){
+    //deletes blank entries
+    FirebaseFirestore.instance.collection('users').doc(uid).collection('places').doc().get().then((snapshot){
+      if(snapshot.exists){
+        snapshot.reference.delete();
+      }
+    });
+    FirebaseFirestore.instance.collection('users').doc(uid).collection('lists').doc().get().then((snapshot){
+      if(snapshot.exists){
+        snapshot.reference.delete();
+      }
+
+    });
+    FirebaseFirestore.instance.collection('users').doc(uid).collection('tags').doc().get().then((snapshot){
+      if(snapshot.exists){
+        snapshot.reference.delete();
+      }
+    });
+  }
+
 }

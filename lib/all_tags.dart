@@ -32,7 +32,7 @@ class AllTags with ChangeNotifier {
     notifyListeners();
   }
 
-  String addTag(name, color) {
+  String addTag(name) {
     //adds tag if name doesn't already exist
     if(allTags.contains(name)){
       //TODO: add snackbar/message to show tag already exists
@@ -40,7 +40,7 @@ class AllTags with ChangeNotifier {
       return "tag already exists";
 
     } else {
-      allTags.insert(allTags.length, Tag(name: name, color: color));
+      allTags.insert(allTags.length, Tag(name: name));
       notifyListeners();
       return "tag added";
     }
@@ -51,13 +51,13 @@ class AllTags with ChangeNotifier {
   }
   void updateTagName(name, newName) {
     allTags.removeWhere((tag) => tag.name == name);
-    allTags.insert(allTags.length, Tag(name: newName, color: name.color));
+    allTags.insert(allTags.length, Tag(name: newName));
     notifyListeners();
   }
 
   void updateSelectedState(name, selectedState) {
     allTags.removeWhere((tag) => tag.name == name);
-    allTags.insert(allTags.length, Tag(name: name, color: name.color));
+    allTags.insert(allTags.length, Tag(name: name));
     notifyListeners();
   }
   void clearAllTags() {

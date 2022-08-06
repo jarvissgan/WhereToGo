@@ -62,7 +62,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
                 return StreamBuilder<List<Place>>(
                     stream: fsService.getPlaces(),
                     builder: (context, snapshot) {
-                      print(snapshot.data?[0].id);
+                      // print(snapshot.data?[0].id);
 
                       List<dynamic> changeLists() {
                         if (snapshot.data != null) {
@@ -80,7 +80,7 @@ class _ListScreenWidgetState extends State<ListScreenWidget>
 
                       List<String>? dropDownList = [];
                       for (var list in snapshot1.data ?? []) {
-                        dropDownList.add(list);
+                        dropDownList.add(list.listName);
                       }
                       dropDownList.insert(0, 'All Entries');
 
