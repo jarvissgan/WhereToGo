@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
+import '../secrets.dart';
 
 class LocationService {
   /*
   location service uses google places api to extract information
   about a location from user input
   */
-  final String key = 'AIzaSyA8a4BGwhUGV9Y0lp81heB8fAo2PXnGsXg';
+  final String key = placeKey;
 
   // Future<String> getPlaceID(String input) async {
   //   //gets place id of location, to be used in getPlace()

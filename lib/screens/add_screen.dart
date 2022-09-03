@@ -202,7 +202,7 @@ class _AddScreenState extends State<AddScreen> {
                                       width:
                                           SizeConfig.blockSizeHorizontal * 100,
                                       height:
-                                          SizeConfig.blockSizeVertical * 101,
+                                          SizeConfig.blockSizeVertical * 100,
                                       child: Column(children: [
                                         //dropdownbutton containing all lists
                                         SizedBox(
@@ -310,7 +310,7 @@ class _AddScreenState extends State<AddScreen> {
                                         ),
                                         Container(
                                           margin: EdgeInsets.only(
-                                            top: 10,
+                                            top: 20,
                                             left: 30,
                                             right: 30,
                                           ),
@@ -337,6 +337,42 @@ class _AddScreenState extends State<AddScreen> {
                                                         autocompleteValue);
                                               }
                                             },
+                                                optionsViewBuilder: (context,
+                                                    AutocompleteOnSelected<AutocompleteValue>
+                                                        onSelected,
+                                                    Iterable<AutocompleteValue>
+                                                        options) {
+                                              return Align(
+                                                alignment: Alignment.topLeft,
+                                                child: Material(
+                                                  elevation: 4.0,
+                                                  child: Container(
+                                                    height: 250.0,
+                                                    child: ListView(
+                                                      padding:
+                                                          EdgeInsets.only(right: 30),
+                                                      children: options
+                                                          .map((AutocompleteValue
+                                                                  option) =>
+                                                              GestureDetector(
+                                                                onTap: () {
+                                                                  onSelected(
+                                                                      option);
+                                                                },
+                                                                child:
+                                                                    ListTile(
+                                                                  title: Text(
+                                                                      option
+                                                                          .description),
+                                                                ),
+                                                              ))
+                                                          .toList(),
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+
+                                                },
                                             onSelected:
                                                 (AutocompleteValue selected) {
                                               LocationService()
